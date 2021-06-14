@@ -135,6 +135,23 @@ To represent with setters
 
 ![](https://i.imgur.com/P9u4632.png)
 
+[Builder() used by inheritance](https://stackoverflow.com/questions/44948858/lombok-builder-on-a-class-that-extends-another-class)
+```java
+@SuperBuilder
+public class Child extends Parent {
+   private String a;
+   private int b;
+   private boolean c;
+}
+
+@SuperBuilder
+public class Parent {
+    private double d;
+    private float e;
+}
+
+Child instance = Child.builder().b(7).e(6.3).build();
+```
 
 ## @Slf4j
 
