@@ -4,6 +4,12 @@
 [java point cookie brief](https://www.javatpoint.com/cookies-in-servlet)
 [spring cookie](https://beginnersbook.com/2013/05/servlet-cookies/)
 [Session Token Cookie](https://blog.yyisyou.tw/5d272c64/)
+[Cookie Forms](https://www.geeksforgeeks.org/javax-servlet-http-cookie-class-java/)
+
+## How functions
+
+![](https://media.geeksforgeeks.org/wp-content/uploads/cookies.jpg)
+
 ## Types of Cookie
 
 - Non-persistent cookie (browser cache)
@@ -24,11 +30,60 @@ Cookies are maintained at client side.
 It will not work if cookie is disabled (e.g forbidded by user ) from the browser.
 **Only String type paramater (textual information) can be set in Cookie object.**
 
+
+## Form and Attributes
+
+Each Cookie forms as the following
+`Name = value pair`
+- This depicts the actual information stored within the cookie. 
+- **Neither the name nor the value should contain white space or any of the following characters: `[ ] ( ) = , ” / ? @ : ;`**
+
+Example of valid cookie name-value pair in payload looks like
+```json
+Set-Cookie:session-id = 187-4969589-3049309
+```
+
+#### Domain
+By default, a cookie applies to the server it came from.(ONLY ALLOWING SAME DOMAIN) 
+> If a cookie is originally set by www.foo.example.com, the browser will only send the cookie back to www.foo.example.com. 
+> However, a site can also indicate that a cookie applies within an entire subdomain, not just at the original server. 
+> For example, this request sets a user cookie for the entire foo.example.com domain:
+
+- The browser will echo this cookie back not just to www.foo.example.com, but also to lothar.foo.example.com, eliza.foo.example.com, enoch.foo.example.com, and any other host somewhere in the foo.example.com domain. 
+
+- However, a server can only set cookies for domains it immediately belongs to. www.foo.example.com cannot set a cookie for www.geeksforgeeks.org, example.com, or .com, no matter how it sets the domain.
+```
+Set-Cookie: user = geek ;Domain =.foo.example.com
+```
+
+#### Path
+When (user/client) requesting a document in the subtree from the same server, the client echoes(returns) that cookie back. 
+However, it does not use the cookie in other directories on the site.
+
+on the index `/` the user whose name called geek should return the cookies to server 
+```
+Set-Cookie: user = geek; Path =/ restricted
+```
+
+#### Expires 
+The browser should remove the cookie from its cache after that date has passed.
+```json
+Set-Cookie: user = geek; expires = Wed, 21-Feb-2017 15:23:00 IST
+```
+####  Max-Age 
+This attribute sets the cookie to expire after a certain number of **seconds** have passed instead of at a specific moment. 
+
+For instance, this cookie expires one hour (3,600 seconds) after it’s first set.
+```json
+Set-Cookie: user = "geek"; Max-Age = 3600
+```
+
 ## Create a Cookie object:
 
 ```java
 // new Cookie(key , value) 
-Cookie c = new Cookie("userName","Chaitanya");
+Cookie c = new Cookie("userName","Chaitanya");Specifies a path for the cookie to which the client should return the cookie.
+
 ```
 
 ## Set the maximum Age:
@@ -110,3 +165,51 @@ public class MyServlet2 extends HttpServlet {
   }
 }
 ```
+
+## methods
+
+
+## Stter Methods 
+```java
+/**
+// Sets the domain in which this cookie is visible. Domains are explained in detail in the attributes of cookie part previously.
+// pattern : string representing the domain in which this cookie is visible.
+**/
+setDomain(String Pattrn) 
+
+/**
+//Specifies the purpose of this cookie.
+//purpose : string representing the purpose of this cookie.
+**/
+setComment(String purpose) 
+
+
+/**
+//Specifies a path for the cookie to which the client should return the cookie.
+//path : path where this cookie is returned
+**/
+setPath(string path)
+
+/**
+// Indicated if secure protocol to be used while sending this cookie. Default value is false.
+// secure - If true, the cookie can only be sent over a secure protocol like https. 
+   If false, it can be sent over any protocol.
+**/
+setSecure(boolean secure)
+
+/**
+//Returns 0 if the cookie complies with the original Netscape specification; 
+  1 if the cookie complies with RFC 2965/2109
+**/
+/*public int */ getVersion() 
+
+/**
+//Used to set the version of the cookie protocol this cookie uses.
+// v - 0 for original Netscape specification; 1 for RFC 2965/2109
+**/
+setVersion(int v) 
+
+/**
+//returns a copy of this cookie.
+**/
+/* public Cookie */ clone()
