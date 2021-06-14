@@ -14,7 +14,9 @@ List <T> linkelist  =  new LinkedList<> ();
 List <T> vector   =  new Vector<> ();
 // Where T is the type of the object
 ```
-
+Optional<String> empty = Optional.empty();
+System.out.println(empty); 
+// output：Optional.empty
 ## ArrayList
 
 `ArrayList` provides us with dynamic arrays in Java.
@@ -82,65 +84,81 @@ Set and List both inheritance collection
 
 `Optional` gives the alternatives (e.g. if-else ... etc) to make code clear
  
+ ## To initialize Optional instance
 
-## To initialize Optional
-
-`empty()` create a null instance
+ There are three methods to initialize optional object
+ 1. `.empty()`
+ 2. `.of(object)`
+ 3. `ofNullable(object)`
+ 
+ 
+`empty()` create a null optional instance
 ```java
+ //Creating a Opetion<String> null elements
 Optional<String> empty = Optional.empty();
 System.out.println(empty); 
 // output：Optional.empty
 ```
-
-`of(parameter)` creates not null instance
-> If `if(parameter) is not null the throws NullPointerException
+ 
+`of(parameter)` creates a not null object
 ```java=
+// creating a Optional<String> 
 Optional<String> opt = Optional.of("mtk");
 System.out.println(opt); 
 // output : Optional[mtk]
+```
+
+If the object inside `of(object)` is null then throws NullPointerException
+```java=
+// object name is null
 String name = null;
 Optional<String> optnull = Optional.of(name);
 // throw NullPointerException
 ```
-
-`.ofNullable()` allows null or not null
+ 
+`.ofNullable()` allows creating the object as null or not null 
 ```java
+// object name is null
 String name = null;
 Optional<String> optOrNull = Optional.ofNullable(name);
-System.out.println(optOrNull); // 输出：Optional.empty
+System.out.println(optOrNull); 
+ // Output：Optional.empty
 ```
 
 ## if optional instance exists ?
 
-`.isPresent()` if exist returns true
+`.isPresent()` if exists then returns true
 ```java=
 Optional<String> opt = Optional.of("hey"); 
 if(opt.isPresent())  System.out.println("true");
 ```
+ > `ifPresentOrElse()` is recommanded insted of `isPresent()` 
 
-`.isEmpty()` if non-exist returns false
+`.isEmpty()` if object is non-existent then returns false
 ```java=
-Optional<String> opt = Optinal.ofNullable(null);
+String object = null;
+Optional<String> opt = Optinal.ofNullable(object);
 if(opt.isEmpty()) System.out.println("true");
 ```
 
-### With lambda 
+### Opetional With lambda 
 
-A example without lambda
 ```java=
+//  Without lambda 
 Optional<String> optOrNull = Optional.ofNullable("WhatsUp");
 if (optOrNull.isPresent()) {
     System.out.println(optOrNull.get().length());
 }
+// with lambda instead 
+ optOrNull.isPresent(str - > System.out.println(str.length()));
 ```
-Lambda makes code clear
-```java=
-optOrNull.isPresent(str - > System.out.println(str.length()));
-```
+
 Since Java 9
-using `.ifPresentOrElse(parameter -> if_expression , else_expression )`
+using `.ifPresentOrElse(parameter -> if_expression , else_expression )` instead
 ```java=
-opt.ifPresentOrElse(str -> System.out.println(str.length()), () -> System.out.println("empty"));
+opt.ifPresentOrElse(
+ (str) ->  {System.out.println(str.length();}, 
+ ()    ->  {System.out.println("empty");    });
 ```
 
 ## default value
@@ -151,7 +169,8 @@ A default `optional` instance's value
 ```java=
 String name = null;
 String opt = Optional.ofNullable(name).orElse("Im_default_value")
-System.out.println(opt); // output : Im_default_value
+System.out.println(opt);    // output : Im_default_value
+
 String opt_2 = Optional.ofNullable(name).orElseGet( ()->"Im_default_value" );
 ```
 
@@ -163,15 +182,14 @@ public static String getDefaultValue(){
     retrun "Im_default_value"
 }
 
-// in public static void main()
+/**
+ * In public static void main()
+*/
 String name = null;
-
 String name2 = Optional.ofNullable(name).orElse(getDefaultValue());
-// print 
-
+// or
 String name3 = Optional.ofNullable(name).orElseGet(OrElseOptionalDemo::getDefaultValue);
 ```
-
 
 ### Different btw `.orELse` and `.orElseGet`
 
@@ -179,27 +197,31 @@ String name3 = Optional.ofNullable(name).orElseGet(OrElseOptionalDemo::getDefaul
 String name = "Im_not_Null";
 String name2 = Optional
                .ofNullable(name)
-                // getDefaultValue will be called         
+                /**
+                 * getDefaultValue() always will be called
+                 * ofNullable is null whether or not
+                 */
                .orElse(getDefaultValue());
+
+ /* usingElseGet() */
 String name3 = Optional
                .ofNullable(name)
                // getDefaultValue will not be called
                .orElseGet(OrElseOptionalDemo::getDefaultValue);
 ```
-> `Class :: Method` without `()` : this method may not be called
+> `Class :: Method` (the above `OrElseOptionalDemmo::getDefaultValue` means this method may not be called
 
 
-## filter
-
-Filter the condition
+## `.filter( para -> condition )`
 
 ```java=
 String password = "12345";
 Optional<String> opt = Optional.ofNullable(password);
+// if parameter pwd's length > 6 exists
 System.out.println(opt.filter(pwd -> pwd.length() > 6).isPresent());
 ```
 
-using `.and(condition)` to filter multiple conditions
+`.and(condition)` to filter multiple conditions
 ```java=
 Predicate<String> len6 = pwd -> pwd.length() > 6;
 Predicate<String> len10 = pwd -> pwd.length() < 10;
@@ -207,21 +229,20 @@ Predicate<String> len10 = pwd -> pwd.length() < 10;
 password = "1234567";
 opt = Optional.ofNullable(password);
 boolean result = opt.filter(len6.and(len10)).isPresent();
-System.out.println(result);
 ```
 
-## map
-
-
+## `map(class::method)` and `map(para->method)`
 ```java=
 String name = "ToMap";
-// a instance
+// creating a option<string> instance named nameOptional
 Optional<String> nameOptional = Optional.of(name);
-Optional<Integer> intOpt = nameOptional
-        .map(String::length);
+
+ // nameOptional.get().length();
+Optional<Integer> intOpt = nameOptional.map(String::length);
 System.out.println( intOpt.orElse(0));
 ```
 
+### filter and map together 
 ```java=
 String password = "password";
 Optional<String>  opt = Optional.ofNullable(password);
@@ -231,5 +252,4 @@ Predicate<String> len10 = pwd -> pwd.length() < 10;
 Predicate<String> eq = pwd -> pwd.equals("password");
 
 boolean result = opt.map(String::toLowerCase).filter(len6.and(len10 ).and(eq)).isPresent();
-System.out.println(result);
 ```
