@@ -5,31 +5,20 @@
 
 `LomBok` makes code elegant  
 For example  
-![](https://i.imgur.com/inZrWpM.png)
-
-
+![](https://i.imgur.com/inZrWpM.png)  
 
 ## Maven
-
 [Maven Version](https://mvnrepository.com/artifact/org.projectlombok/lombok)
 
 ```xml=
 <dependency>
     <groupId>org.projectlombok</groupId>
     <artifactId>lombok</artifactId>
-    <version> <!--look up office page to pick up--> </version>​
-80
-[For inheritance same hashcode problem](https://blog.csdn.net/zhanlanmg/article/details/50392266)
-81
-use `@EqualsAndHashCode(callSuper=true)` when derived
+    <version> <!--look up office page to pick up--> </version>
 </dependency>
 ```
 
-
-
 ## Annotations
-
-
 ![](https://i.imgur.com/H0vjt5y.png)
 
 
@@ -39,14 +28,14 @@ public class User{
     private Integer id  ;
     private String name ;
     
-    // setter and getter
-    // ToString
+    // setter and getter methods
+    // Tostring method
 }
 ```
 
-
 ### @Tostring
 
+This equals
 ```java=
 public String toString{
     return "User(id = " this.id + ", name = " this.name ")";
@@ -54,21 +43,23 @@ public String toString{
 ```
 
 ### @EqualAndHashCode
-#### `@EqualAndHashCode` equals
+
+this equals
 ```java=
 public boolean equals(Object o)
 {
     //...
 }
+
 public int hashCode
 {
+    // attirbutes id and name
     return Object.hash(id,name)
 }
 ```
 
-#### `@EqualAndHashCode(exclude = "id")` equals
-
-attribute `id` excludes from `equal` and `HashCode`
+`@EqualAndHashCode(exclude = "id")` equals
+this will exclude attribute `id` from `equal` and `HashCode`
 
 ```java=
 public boolean equals(Object o)
@@ -77,12 +68,15 @@ public boolean equals(Object o)
 }
 public int hashCode
 {
+    // attribute name only
     return Object.hash(name)
 }
 ```
 
 [For inheritance same hashcode problem](https://blog.csdn.net/zhanlanmg/article/details/50392266)  
-use `@EqualsAndHashCode(callSuper=true)` when derived and base has same hashcode, set `callSuper = true`
+By using `@EqualsAndHashCode(callSuper=true)` to solve the problem when derived and base has same hashcode, set `callSuper = true`  
+
+
 ## @NoArgsConstructor
 
 equals
@@ -90,7 +84,6 @@ equals
 // ...
 public User(){}
 ```
-
 
 ##  @AllArgsConstructor  
 equals
@@ -113,26 +106,15 @@ With Spring Data JPA , do make sure add annotation `@NoArgsConstructor` while th
 set the required attribute as `final` type 
 ![](https://i.imgur.com/hcyzMlD.png)
 
-
-96
-​
-97
-​
-98
-equals
-99
 ```java=
-100
-//..
-101
 public User(id, name){
-102
-    this.id = id;
+    this.id = id;
+}
+
 ## @Data
 
 `@Data` represents
 > `@Getter/@Setter`, `@ToString`, `@EqualsAndHashCode`, `@RequiredArgsConstructor`
-
 
 ## @Value
 
