@@ -65,7 +65,7 @@ this will exclude attribute `id` from `equal` and `HashCode`
 public boolean equals(Object o)
 {
     //...
-}
+}B
 public int hashCode
 {
     // attribute name only
@@ -110,6 +110,7 @@ set the required attribute as `final` type
 public User(id, name){
     this.id = id;
 }
+```
 
 ## @Data
 
@@ -120,20 +121,18 @@ public User(id, name){
 
 All the Attributes will be `final` type
 
-
 :::danger  
 - `@Data` 適合用在 POJO 或 DTO 上，而這個 `@Value` 注解，則是適合加在值不希望被改變的類上，像是某個類的值當創建後就不希望被更改，只希望我們讀它而已，就適合加上 `@Value` 注解
 - lombok 的注解 `@Value` 和另一個 Spring 的注解 `@Value` 撞名
 :::  
 
-
 ## @Builder
 
-To represent with setters  
-
+To represent with setters 
 ![](https://i.imgur.com/P9u4632.png)
 
-[Builder() used by inheritance](https://stackoverflow.com/questions/44948858/lombok-builder-on-a-class-that-extends-another-class)  
+[`.Builder()` method used by inheritance](https://stackoverflow.com/questions/44948858/lombok-builder-on-a-class-that-extends-another-class)  
+
 ```java
 @SuperBuilder
 public class Child extends Parent {
@@ -152,5 +151,7 @@ Child instance = Child.builder().b(7).e(6.3).build();
 ```
 
 ## @Slf4j
+
+Log the console's information
 
 ![](https://i.imgur.com/rGbxUUo.png)
