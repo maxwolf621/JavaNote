@@ -17,7 +17,11 @@ For example
 <dependency>
     <groupId>org.projectlombok</groupId>
     <artifactId>lombok</artifactId>
-    <version> <!--look up office page to pick up--> </version>
+    <version> <!--look up office page to pick up--> </version>​
+80
+[For inheritance same hashcode problem](https://blog.csdn.net/zhanlanmg/article/details/50392266)
+81
+use `@EqualsAndHashCode(callSuper=true)` when derived
 </dependency>
 ```
 
@@ -77,7 +81,7 @@ public int hashCode
 }
 ```
 
-[For inheritance same hashcode problem](https://blog.csdn.net/zhanlanmg/article/details/50392266)
+[For inheritance same hashcode problem](https://blog.csdn.net/zhanlanmg/article/details/50392266)  
 use `@EqualsAndHashCode(callSuper=true)` when derived and base has same hashcode, set `callSuper = true`
 ## @NoArgsConstructor
 
@@ -88,9 +92,7 @@ public User(){}
 ```
 
 
-##  @AllArgsConstructor
-
-
+##  @AllArgsConstructor  
 equals
 ```java=
 //..
@@ -108,16 +110,28 @@ With Spring Data JPA , do make sure add annotation `@NoArgsConstructor` while th
 
 ## @RequiredArgsConstructor
 
-Specified Attribute will be `final` 
-
+set the required attribute as `final` type 
 ![](https://i.imgur.com/hcyzMlD.png)
 
 
+96
+​
+97
+​
+98
+equals
+99
+```java=
+100
+//..
+101
+public User(id, name){
+102
+    this.id = id;
 ## @Data
 
-
 `@Data` represents
-> @Getter/@Setter, @ToString, @EqualsAndHashCode, @RequiredArgsConstructor
+> `@Getter/@Setter`, `@ToString`, `@EqualsAndHashCode`, `@RequiredArgsConstructor`
 
 
 ## @Value
@@ -125,20 +139,19 @@ Specified Attribute will be `final`
 All the Attributes will be `final` type
 
 
-:::danger
-上面那個 @Data 適合用在 POJO 或 DTO 上，而這個 @Value 注解，則是適合加在值不希望被改變的類上，像是某個類的值當創建後就不希望被更改，只希望我們讀它而已，就適合加上 @Value 注解，也就是 @Value for immutable class
-
-另外注意一下，此 lombok 的注解 @Value 和另一個 Spring 的注解 @Value 撞名，在 import 時不要 import 錯了
-:::
+:::danger  
+- `@Data` 適合用在 POJO 或 DTO 上，而這個 `@Value` 注解，則是適合加在值不希望被改變的類上，像是某個類的值當創建後就不希望被更改，只希望我們讀它而已，就適合加上 `@Value` 注解
+- lombok 的注解 `@Value` 和另一個 Spring 的注解 `@Value` 撞名
+:::  
 
 
 ## @Builder
 
-To represent with setters
+To represent with setters  
 
 ![](https://i.imgur.com/P9u4632.png)
 
-[Builder() used by inheritance](https://stackoverflow.com/questions/44948858/lombok-builder-on-a-class-that-extends-another-class)
+[Builder() used by inheritance](https://stackoverflow.com/questions/44948858/lombok-builder-on-a-class-that-extends-another-class)  
 ```java
 @SuperBuilder
 public class Child extends Parent {
