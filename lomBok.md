@@ -4,8 +4,7 @@
 [TOC]
 
 `LomBok` makes code elegant  
-
-For example
+For example  
 ![](https://i.imgur.com/inZrWpM.png)
 
 
@@ -30,7 +29,7 @@ For example
 ![](https://i.imgur.com/H0vjt5y.png)
 
 
-If there is a class
+If there is a class 
 ```java=
 public class User{
     private Integer id  ;
@@ -52,7 +51,6 @@ public String toString{
 
 ### @EqualAndHashCode
 #### `@EqualAndHashCode` equals
-
 ```java=
 public boolean equals(Object o)
 {
@@ -65,6 +63,9 @@ public int hashCode
 ```
 
 #### `@EqualAndHashCode(exclude = "id")` equals
+
+attribute `id` excludes from `equal` and `HashCode`
+
 ```java=
 public boolean equals(Object o)
 {
@@ -76,6 +77,8 @@ public int hashCode
 }
 ```
 
+[For inheritance same hashcode problem](https://blog.csdn.net/zhanlanmg/article/details/50392266)
+use `@EqualsAndHashCode(callSuper=true)` when derived and base has same hashcode, set `callSuper = true`
 ## @NoArgsConstructor
 
 equals
