@@ -8,6 +8,18 @@
 ## How functions
 
 ![](https://media.geeksforgeeks.org/wp-content/uploads/cookies.jpg)  
+![image](https://user-images.githubusercontent.com/68631186/122122215-18e7ee00-ce5f-11eb-8168-2f75bc710740.png)
+
+
+For example  
+
+![image](https://user-images.githubusercontent.com/68631186/122121919-bee72880-ce5e-11eb-8bef-13f04ef9300a.png)
+```json
+Alice -> Bob: Request
+Bob --> Alice: Response: Set-Cookie: SID=31d4d96e407aad42
+Alice -> Bob: Request: Cookie: SID=31d4d96e407aad42
+Bob --> Alice: Response
+```
 
 ## Types of Cookie
 
@@ -43,6 +55,12 @@ Set-Cookie:session-id = 187-4969589-3049309
 ```
 
 #### Domain
+
+```
+請求的 Domain 與 Cookie Domain 一樣
+請求的 Domain 是 Cookie Domain 的子網域
+```
+
 By default, a cookie applies to the server it came from.(ONLY ALLOWING SAME DOMAIN) 
 > If a cookie is originally set by www.foo.example.com, the browser will only send the cookie back to www.foo.example.com.  
 > However, a site can also indicate that a cookie applies within an entire subdomain, not just at the original server.  
