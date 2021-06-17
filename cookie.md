@@ -1,15 +1,14 @@
 
-[Same cookie name problem](https://stackoverflow.com/questions/3193163/is-calling-httpservletresponse-addcookie-with-the-same-cookie-name-safe)  
-[java point cookie brief](https://www.javatpoint.com/cookies-in-servlet)  
+[Same cookiename problem](https://stackoverflow.com/questions/3193163/is-calling-httpservletresponse-addcookie-with-the-same-cookie-name-safe)  
 [spring cookie](https://beginnersbook.com/2013/05/servlet-cookies/)  
-[Session Token Cookie](https://blog.yyisyou.tw/5d272c64/)  
-[Cookie Forms](https://www.geeksforgeeks.org/javax-servlet-http-cookie-class-java/)  
+[Session/Token/Cookie](https://blog.yyisyou.tw/5d272c64/)  
+[Cookie Methods](https://www.geeksforgeeks.org/javax-servlet-http-cookie-class-java/)  
+[Vorstellung von cookies](https://ithelp.ithome.com.tw/articles/10217955)
 
-## How functions
+## How cookies functions
 
 ![](https://media.geeksforgeeks.org/wp-content/uploads/cookies.jpg)  
 ![image](https://user-images.githubusercontent.com/68631186/122122215-18e7ee00-ce5f-11eb-8168-2f75bc710740.png)
-
 
 For example  
 
@@ -28,10 +27,9 @@ Bob --> Alice: Response
   > It is removed each time when user closes the browser.  
   >> which means the cookies do not have expiration time. It lives in the browser memory  
 - Persistent cookie (stored in user hard driver)
-  > It is valid for multiple session. 
+  > It is valid for multiple sessions. 
   > It is not removed each time when user closes the browser. 
   > **It is removed only if user logout or signout.** or **get destroyed based on the expiry time**  
-
 
 ## Advantage of Cookies
 - **Simplest technique of maintaining the state.**  
@@ -56,10 +54,8 @@ Set-Cookie:session-id = 187-4969589-3049309
 
 #### Domain
 
-```
-請求的 Domain 與 Cookie Domain 一樣
-請求的 Domain 是 Cookie Domain 的子網域
-```
+> request payload的`Domain 與 Cookie Domain 一樣  
+> request payload的 Domain 是 Cookie Domain 的子網域  
 
 By default, a cookie applies to the server it came from.(ONLY ALLOWING SAME DOMAIN) 
 > If a cookie is originally set by www.foo.example.com, the browser will only send the cookie back to www.foo.example.com.  
@@ -74,10 +70,14 @@ Set-Cookie: user = geek ;Domain =.foo.example.com
 ```
 
 #### Path
-When (user/client) requesting a document in the subtree from the same server, the client echoes(returns) that cookie back. 
-However, it does not use the cookie in other directories on the site.  
 
-on the index `/` the user whose name called geek should return the cookies to server  
+The scope of each cookie is limited to a set of paths, controlled by the Path attribute.  
+
+If the server omits the Path attribute, the user agent will use the "directory" of the request-uri's path component as
+   the default value.  (See Section 5.1.4 for more details.)
+
+The user agent will include the cookie in an HTTP request only if the path portion of the request-uri matches (or is a subdirectory of) the
+cookie's Path attribute, where the `/` character is interpreted as a directory separator.
 ```
 Set-Cookie: user = geek; Path =/ restricted
 ```
@@ -94,25 +94,26 @@ For instance, this cookie expires one hour (3,600 seconds) after it’s first se
 Set-Cookie: user = "geek"; Max-Age = 3600
 ```
 
-## Create a Cookie object:
+## Methods to set up the Cookies Attributes
 
+### Create a Cookie object:
 ```java
 // new Cookie(key , value) 
-Cookie c = new Cookie("userName","Chaitanya");Specifies a path for the cookie to which the client should return the cookie.
-
+Cookie c = new Cookie("userName","Chaitanya"); //Specifies a path for the cookie to which the client should return the cookie.=
 ```
 
-## Set the maximum Age:
+### Set the maximum Age:
 ```java
-c.setMaxAge(1800); 
-// live (60*3*10) 1800 seconds, half min
+cookie.setMaxAge(-1); //expire this cookie as browser is closed
+cookie.setMaxAge(0);  //expire this cookie onice when browser receives 
+cookie.setMaxAge(1800);  // live (60*3*10) 1800 seconds, half min
 ```
-## Place the Cookie in HTTP response header:
+### Place the Cookie in HTTP response header:
 ```java
 response.addCookie(c);
 ```
 
-## Read cookies
+### (servlet) Read cookies 
 ```java
 Cookie c[]=request.getCookies(); 
 //c.length gives the cookie count 
@@ -121,6 +122,9 @@ for(int i=0;i<c.length;i++){
 }
 ```
 
+### Client asks for Cookie and Send Cookie
+MyServlet1.java
+First time that a new client send a request (to require a cookie)
 ```java 
 import java.io.*;
 import javax.servlet.*;
@@ -133,15 +137,16 @@ public class MyServlet1 extends HttpServlet
           response.setContentType("text/html");
           PrintWriter pwriter = response.getWriter();
 
+          // request from client
           String name = request.getParameter("userName");
           String password = request.getParameter("userPassword");
           pwriter.print("Hello "+name);
           pwriter.print("Your Password is: "+password);
 
-          //Creating two cookies
+          //Creating two cookies to client
           Cookie c1=new Cookie("userName",name);
           Cookie c2=new Cookie("userPassword",password);
-
+          
           //Adding the cookies to response header
           response.addCookie(c1);
           response.addCookie(c2);
@@ -154,6 +159,7 @@ public class MyServlet1 extends HttpServlet
 }
 ```
 MyServlet2.java
+Second time the client sends the request with cookie
 ```java
 import java.io.*;
 import javax.servlet.*;
@@ -165,7 +171,7 @@ public class MyServlet2 extends HttpServlet {
        response.setContentType("text/html");
        PrintWriter pwriter = response.getWriter();
  
-       //Reading cookies
+       //Reading cookies 
        Cookie c[]=request.getCookies(); 
        //Displaying User name value from cookie
        pwriter.print("Name: "+c[1].getValue()); 
@@ -180,7 +186,7 @@ public class MyServlet2 extends HttpServlet {
 }
 ```
 
-## Stter Methods 
+## Setter Methods 
 ```java
 /**
 // Sets the domain in which this cookie is visible. Domains are explained in detail in the attributes of cookie part previously.
@@ -224,3 +230,73 @@ setVersion(int v)
 //returns a copy of this cookie.
 **/
 /* public Cookie */ clone()
+```
+
+## HttpServletRquest and HttpServletResponse
+
+Application(client) sends HttpServletRequest inlcuded cookies 
+
+and Http Servlet can do these things
+1. get Cookie from request
+2. modify Cookie from request 
+3. delete Cookie from request
+
+### get Cookie
+```java 
+protected void createCookie(HttpServletRequest request, HttpServletResponse response)
+    throws ServletException, IOException {
+
+  // create Cookie
+  Cookie cookie = new Cookie("cookie-name", "cookie-Value");
+  Cookie cookie2 = new Cookie("cookie-name2", "cookie-Value2");
+
+  // add the cookies in the response payload 
+  response.addCookie(cookie);
+  response.addCookie(cookie2);
+  response.getWriter().write("Created……");
+```
+
+### modify cookie name's value
+
+client sends the request with cookie named cookie-name then 
+```java
+protected void updateCookie(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+  // create a cookie object whoses cookie name is cookie-name
+  Cookie cookie = new Cookie("cookie-name", null);
+  // modify cookie name's value
+  cookie.setValue("this is new value");
+  
+  // add it in the response and the cookie data in client will be updated
+  response.addCookie(cookie);
+}
+```
+
+### delete cookie
+
+[To remove the cookie](https://stackoverflow.com/questions/890935/how-do-you-remove-a-cookie-in-a-java-servlet)
+
+`.setMaxAge(0)` 
+
+```java
+private void eraseCookie(HttpServletRequest req, HttpServletResponse res) {
+    Cookie[] cookies = req.getCookies();
+    if (cookies != null)
+        for (Cookie cookie : cookies) {
+            cookie.setValue("");
+            cookie.setPath("/");
+            cookie.setMaxAge(0);
+            res.addCookie(cookie);
+        }
+}
+```
+
+
+
+
+
+
+
+
+
+
+
