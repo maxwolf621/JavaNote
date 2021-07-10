@@ -1,22 +1,23 @@
 # java.util.*
-[TOC]
+[TOC]  
 
-![](https://i.imgur.com/B0TSLRj.png)
+![](https://i.imgur.com/B0TSLRj.png)  
 ## reference
-[1](https://www.geeksforgeeks.org/collections-in-java-2/)
-[2](https://jax-work-archive.blogspot.com/2015/02/java-setlistmap.html)
+[1](https://www.geeksforgeeks.org/collections-in-java-2/)  
+[2](https://jax-work-archive.blogspot.com/2015/02/java-setlistmap.html)  
+
 # List Interface
 list interface is implemented by various classes like `ArrayList`, `Vector`, `Stack`.
 So we can have such declarations 
-```java=
+```java
+/** 
+ *
+ * @Param T is the date type of the object
+ */
 List <T> arraylist  =  new ArrayList<> ();
 List <T> linkelist  =  new LinkedList<> ();
-List <T> vector   =  new Vector<> ();
-// Where T is the type of the object
+List <T> vector     =  new Vector<> ();
 ```
-Optional<String> empty = Optional.empty();
-System.out.println(empty); 
-// output：Optional.empty
 ## ArrayList
 
 `ArrayList` provides us with dynamic arrays in Java.
@@ -25,17 +26,17 @@ System.out.println(empty);
 ## Vector
 A vector provides us with dynamic arrays in Java
 > This is identical to ArrayList in terms of implementation. 
->> However, the primary difference between a vector and an ArrayList is that a Vector is synchronized and an ArrayList is non-synchronized. Let’s understand the Vector with an example:
+
+- However, the primary **difference between a vector and an ArrayList is that a Vector is synchronized and an ArrayList is non-synchronized**.
 
 # Set Interface 
-A set is an unordered collection of objects in which duplicate values cannot be stored.
+A set is an unordered collection of objects in which **duplicate values cannot be stored**.
 
->  This set interface is implemented by various classes like HashSet, TreeSet, LinkedHashSet
-```java=
+This `Set` interface is implemented by various classes like `HashSet`, `TreeSet`, `LinkedHashSet`
+```java
 Set<T> hs = new HashSet<> ();
 Set<T> lhs = new LinkedHashSet<> ();
 Set<T> ts = new TreeSet<> ();
-// Where T is the type of the object.
 ```
 
 ## HashSet
@@ -43,7 +44,10 @@ Set<T> ts = new TreeSet<> ();
 
 Traversing Element using `iterator`
 ```java
- // Traversing elements
+/**
+ *
+ * Traversing elements
+ */
 Iterator<String> itr = hs.iterator();
 while (itr.hasNext()) {
     System.out.println(itr.next());
