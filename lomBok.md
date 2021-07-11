@@ -10,7 +10,7 @@ For example
 ## Maven
 [Maven Version](https://mvnrepository.com/artifact/org.projectlombok/lombok)
 
-```xml=
+```xml
 <dependency>
     <groupId>org.projectlombok</groupId>
     <artifactId>lombok</artifactId>
@@ -23,35 +23,35 @@ For example
 
 
 If there is a class 
-```java=
+```java
 public class User{
     private Integer id  ;
     private String name ;
     
     // setter and getter methods
-    // Tostring method
+    // toString method
 }
 ```
 
-### @Tostring
+### @ToString
 
 This equals
-```java=
+```java
 public String toString{
-    return "User(id = " this.id + ", name = " this.name ")";
+    return "User(id =" this.id + ", name = " this.name ")";
 }
 ```
 
 ### @EqualAndHashCode
 
 this equals
-```java=
+```java
 public boolean equals(Object o)
 {
     //...
 }
 
-public int hashCode
+public int hashCode()
 {
     // attirbutes id and name
     return Object.hash(id,name)
@@ -61,7 +61,7 @@ public int hashCode
 `@EqualAndHashCode(exclude = "id")` equals
 this will exclude attribute `id` from `equal` and `HashCode`
 
-```java=
+```java
 public boolean equals(Object o)
 {
     //...
@@ -76,18 +76,17 @@ public int hashCode
 [For inheritance same hashcode problem](https://blog.csdn.net/zhanlanmg/article/details/50392266)  
 By using `@EqualsAndHashCode(callSuper=true)` to solve the problem when derived and base has same hashcode, set `callSuper = true`  
 
-
 ## @NoArgsConstructor
 
 equals
-```java=
+```java
 // ...
 public User(){}
 ```
 
 ##  @AllArgsConstructor  
 equals
-```java=
+```java
 //..
 public User(id, name){
     this.id = id;
@@ -95,18 +94,17 @@ public User(id, name){
 }
 ```
 
-:::info
-if we dont create a constructor, java will create a No args Constructor by itself 
-
-With Spring Data JPA , do make sure add annotation `@NoArgsConstructor` while there is `@AllArgsConstrcutor`
-:::
+:::info    
+if we dont create a constructor, java will create a No args Constructor by itself   
+so do make sure add annotation `@NoArgsConstructor` while there is `@AllArgsConstrcutor`  
+:::  
 
 ## @RequiredArgsConstructor
 
 set the required attribute as `final` type 
 ![](https://i.imgur.com/hcyzMlD.png)
 
-```java=
+```java
 public User(id, name){
     this.id = id;
 }
@@ -119,12 +117,12 @@ public User(id, name){
 
 ## @Value
 
-All the Attributes will be `final` type
+same as the Attributes with `final` type
 
-:::danger  
-- `@Data` 適合用在 POJO 或 DTO 上，而這個 `@Value` 注解，則是適合加在值不希望被改變的類上，像是某個類的值當創建後就不希望被更改，只希望我們讀它而已，就適合加上 `@Value` 注解
-- lombok 的注解 `@Value` 和另一個 Spring 的注解 `@Value` 撞名
-:::  
+:::danger   
+- `@Data` 適合用在 **POJO 或 DTO**上，而這個 `@Value` 注解，則是適合加在值不希望被改變的類上，像是某個類的值當創建後就不希望被更改，只希望我們讀它而已，就適合加上 `@Value` 注解
+- lombok 的注解 `@Value` 和另一個 Spring 的注解 `@Value` 撞名  
+:::   
 
 ## @Builder
 
