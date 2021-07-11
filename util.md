@@ -1,25 +1,93 @@
 # java.util.*
-[TOC]  
-
+[Colletion](https://www.geeksforgeeks.org/collections-in-java-2/)  
+[Util methods](https://jax-work-archive.blogspot.com/2015/02/java-setlistmap.html)  
 ![](https://i.imgur.com/B0TSLRj.png)  
-## reference
-[1](https://www.geeksforgeeks.org/collections-in-java-2/)  
-[2](https://jax-work-archive.blogspot.com/2015/02/java-setlistmap.html)  
+
+
+# Collection interface
+**A class method** used for Set interface, List interface
+Set and List both inheritance collection
+```java
+/**
+  * <p> 
+  * add a new ref into the collection
+  * </p>
+  */
+boolean add(Object o)      
+
+/**
+  * <h#> 
+  * 刪除集合中所有的物件，即不再持有這些物件的引用 
+  * </h#>
+  */
+void clear()              
+
+/**
+  * <p> 
+  * 判斷集合是否為{@code null}
+  * </p>
+  */
+boolean isEmpty()         
+
+/**
+  * <p>
+  * 判斷集合中是否持有特定物件的引用
+  * </p>
+  */
+boolean contains(Object o)  
+
+/**
+  * <p> 
+  * delete a ref in collection 
+  * </p>
+  */
+boolean remove(Object o)
+
+/** 
+  * @return Iterator 物件，可以用來遍歷集合中的元素 
+  */
+Iterartor iterator()  
+
+/**
+  * @return Length of the Collection
+  */
+int size() 
+
+/**
+  * @return an {@code Object[]}
+  */
+Object[] toArray() 
+
+/**
+  * @return {@code true} if {@code itr.next != NULL}
+  */
+itr.hasNext() 
+
+/**
+  * @return 返回下一個元素<object>
+  */
+itr.next() 
+
+/**
+  * <p> 
+  * 從集合中刪除上一個有 {@code next()} 方法返回的元素
+  * </p>
+  */
+itr.remove() 
+```
 
 # List Interface
 list interface is implemented by various classes like `ArrayList`, `Vector`, `Stack`.
 So we can have such declarations 
 ```java
 /** 
- *
- * @Param T is the date type of the object
+ * <p> {@code T} is the date type of the object </p>
  */
 List <T> arraylist  =  new ArrayList<> ();
 List <T> linkelist  =  new LinkedList<> ();
 List <T> vector     =  new Vector<> ();
 ```
 ## ArrayList
-
 `ArrayList` provides us with dynamic arrays in Java.
 > It can not be used for primitive types, 
 
@@ -28,6 +96,67 @@ A vector provides us with dynamic arrays in Java
 > This is identical to ArrayList in terms of implementation. 
 
 - However, the primary **difference between a vector and an ArrayList is that a Vector is synchronized and an ArrayList is non-synchronized**.
+
+# Map Interface 
+[HashMap](https://techmastertutorial.in/java-collection-internal-hashmap.html)  
+[HashMap SourceCode](https://www.gushiciku.cn/pl/gVdy/zh-hk)  
+[Calcuate hascode and index of bucket](https://www.geeksforgeeks.org/internal-working-of-hashmap-java/)  
+
+## HashMap
+- HashMap stores the key-value pairs using a hash table.  
+- Entry : The Set of key-value pairs
+- In the hash table each key-value pair is mapped corresponding to the hashcode derived from the key.  
+
+
+![image](https://user-images.githubusercontent.com/68631186/125174975-b71b6980-e1fb-11eb-8803-54ca5fe54bb9.png)
+- First hash code is calculated for the keys.  
+- Using the hashcode, index is identified in the bucket array.  
+- In the array, **each array index is mapped to the hashcode derived from the key**. 
+    > Each array index ( or we can say each bucket ) contains a reference to a linked list in which we store the key-value pair entry.
+
+![image](https://user-images.githubusercontent.com/68631186/125176665-dfa96080-e207-11eb-8b2e-15088e3b721e.png)  
+- For a key-value pair, first identify the hash code for the key using the `hashcode` method.  (`index = hashCode(key) & (n-1).`)
+    > Once we have the hash code, index (of the array) is calculated to identify the bucket in which the key-value pair will be stored.  
+    >>  Once we have the bucket index (of the array) , check for the entry (linked) list.
+- For entry list  , if
+    1. we do not have the already existing list corresponding to that (bucket) index then we create a list and add the key-value pair entry to this list. 
+    2. already there is a list of the key-value entries then we go through(search) the list check for key object 
+- For Key , if
+    1. the key already exist then we override the value.    
+    2. **the key is not there then a new entry is created** for the key-value pair. 
+        > New entry is then added to the list
+
+
+HashMap's internal hash table is is created only after the first use.   
+- Initially the hash table is null.   
+- Table is initialized only when the first insertion call is made for the HashMap instance.  
+```java
+transient Node<K,V>[] table;
+```
+
+### capacity and load factor 
+**The two parameters that affect the performance of HashMap are – initial capacity and load factor.**   
+- Initial capacity is the initial size of the hash table 
+- load factor is is a measure of how full the hash table is allowed to get before its capacity is automatically increased. 
+```java
+/**
+  * @apinote Using the initial capacity and load factor, threshold is calculated. 
+  *          Threshold is the size limit after which table is resized/rehashed. 
+  *          The value of the threshold is {@code (int)(capacity * loadFactor).)}
+  */
+public HashMap(int initialCapacity, float loadFactor) {  
+       if (initialCapacity < 0)  
+           throw new IllegalArgumentException("Illegal initial capacity: " +  
+                                              initialCapacity);  
+       if (initialCapacity > MAXIMUM_CAPACITY)  
+           initialCapacity = MAXIMUM_CAPACITY;  
+       if (loadFactor <= 0 || Float.isNaN(loadFactor))  
+           throw new IllegalArgumentException("Illegal load factor: " +  
+                                              loadFactor);  
+       this.loadFactor = loadFactor;  
+       this.threshold = tableSizeFor(initialCapacity);  
+   }  
+```
 
 # Set Interface 
 A set is an unordered collection of objects in which **duplicate values cannot be stored**.
@@ -38,55 +167,22 @@ Set<T> hs = new HashSet<> ();
 Set<T> lhs = new LinkedHashSet<> ();
 Set<T> ts = new TreeSet<> ();
 ```
-
 ## HashSet
-**The objects that we insert into the HashSet do not guarantee to be inserted in the same order**
+**The objects that we insert into the HashSet do not guarantee to be inserted in the same order**  
 
-Traversing Element using `iterator`
-```java
-/**
- *
- * Traversing elements
- */
-Iterator<String> itr = hs.iterator();
-while (itr.hasNext()) {
-    System.out.println(itr.next());
-}
-```
+> HashSet uses the **unique key concept of the HasMap** and **inserts the values of the HashSet** in the underlying HashMap as keys and just put some dummy object corresponding to each key. Which makes it a O(1) insertion data structure and keeps the values unique in a HashSet.
+
+- HashSet allows null `value`.
+- HashSet class is non synchronized.
+- HashSet doesn't maintain the insertion order. Here, elements are inserted on the basis of their hashcode.
+- **HashSet is the best approach for search operations**.   
+![image](https://user-images.githubusercontent.com/68631186/125178853-19d02d80-e21b-11eb-87d8-dd34361b438c.png)  
 
 ## LinkedHashSet
-
 Use a **doubly linked list** to store the data and retains the ordering of the elements
 
-# Map Interface 
-
-## HashMap
-It stores the data in (Key, Value) pairs. 
-To access a value in a HashMap
-
-```java
-HashMap<Integer, String> hm
-    = new HashMap<Integer, String>();
-
-hm.put(1, "index1");
-hm.put(2, "index2");
-
-// hashtable.get(index)
-System.out.println("Value for 1 is " + hm.get(1));
-
-// .entrySet() , .Entry<?,?> to traverse 
-for (Map.Entry<Integer, String> e : hm.entrySet())
-    System.out.println(e.getKey() + " " + e.getValue());
-```
-# Collection interface
-**A class method** used for Set interface, List interface
-Set and List both inheritance collection
-
-
-
 # Optional
-
-`Optional` gives the alternatives (e.g. if-else ... etc) to make code clear
+`Optional` gives the alternatives (e.g. if-else ... etc) to make code cleaner
  
  ## To initialize Optional instance
 
@@ -98,35 +194,48 @@ Set and List both inheritance collection
  
 `empty()` create a null optional instance
 ```java
- //Creating a Opetion<String> null elements
+/**
+ * <p> 
+ * Creating a {@code Opetion<String> null} elements 
+ * </p>
+ */
 Optional<String> empty = Optional.empty();
+/**
+  * @return {@code Optional.empty}
+  */
 System.out.println(empty); 
-// output：Optional.empty
+
 ```
  
 `of(parameter)` creates a not null object
-```java=
-// creating a Optional<String> 
+```java
 Optional<String> opt = Optional.of("mtk");
+/**
+ * <p> it prints {@code Optional[mtk] }</p>
+ */
 System.out.println(opt); 
-// output : Optional[mtk]
 ```
 
 If the object inside `of(object)` is null then throws NullPointerException
-```java=
-// object name is null
+```java
 String name = null;
+/** 
+  * <p> 
+  * if object inside {@code of} is {@code null} 
+  * @throws NullPointerException
+  * </p>
+  */
 Optional<String> optnull = Optional.of(name);
-// throw NullPointerException
 ```
  
 `.ofNullable()` allows creating the object as null or not null 
 ```java
-// object name is null
 String name = null;
 Optional<String> optOrNull = Optional.ofNullable(name);
+/**
+ * @return {@code Optional.empty}
+ */
 System.out.println(optOrNull); 
- // Output：Optional.empty
 ```
 
 ## if optional instance exists ?
@@ -139,7 +248,7 @@ if(opt.isPresent())  System.out.println("true");
  > `ifPresentOrElse()` is recommanded insted of `isPresent()` 
 
 `.isEmpty()` if object is non-existent then returns false
-```java=
+```java
 String object = null;
 Optional<String> opt = Optinal.ofNullable(object);
 if(opt.isEmpty()) System.out.println("true");
@@ -147,48 +256,55 @@ if(opt.isEmpty()) System.out.println("true");
 
 ### Opetional With lambda 
 
-```java=
-//  Without lambda 
+```java
+/**
+ * <p> 
+ * Without lambda
+ * </p>
 Optional<String> optOrNull = Optional.ofNullable("WhatsUp");
 if (optOrNull.isPresent()) {
     System.out.println(optOrNull.get().length());
 }
-// with lambda instead 
+
+/**
+ * <p> 
+ * With lambda 
+ * </p>
+ */
  optOrNull.isPresent(str - > System.out.println(str.length()));
 ```
 
 Since Java 9
 using `.ifPresentOrElse(parameter -> if_expression , else_expression )` instead
-```java=
+```java
 opt.ifPresentOrElse(
  (str) ->  {System.out.println(str.length();}, 
  ()    ->  {System.out.println("empty");    });
 ```
 
 ## default value
-
 A default `optional` instance's value
 
 `.orElse` and `.orElseGet` method
-```java=
+```java
 String name = null;
 String opt = Optional.ofNullable(name).orElse("Im_default_value")
-System.out.println(opt);    // output : Im_default_value
-
+/**
+  * @return {@code String} Im_default_value
+  */
+System.out.println(opt);    
 String opt_2 = Optional.ofNullable(name).orElseGet( ()->"Im_default_value" );
 ```
 
-function as parameter of `.orELse` and `.orElseGet` method
-```java=
-// function
+```java
 public static String getDefaultValue(){
     System.out.println("calling getDefaultValue");
     retrun "Im_default_value"
 }
 
 /**
- * In public static void main()
-*/
+ * In  <pre> public static void main() </pre>
+ */
 String name = null;
 String name2 = Optional.ofNullable(name).orElse(getDefaultValue());
 // or
@@ -196,37 +312,50 @@ String name3 = Optional.ofNullable(name).orElseGet(OrElseOptionalDemo::getDefaul
 ```
 
 ### Different btw `.orELse` and `.orElseGet`
-
-```java=
+```java
 String name = "Im_not_Null";
+
+/**
+  * using {@code orElse(Method())} 
+  */
 String name2 = Optional
                .ofNullable(name)
                 /**
-                 * getDefaultValue() always will be called
-                 * ofNullable is null whether or not
+                 * {@code getDefaultValue()} always will be called
+                 * {@code ofNullable(name)} is null whether or not
                  */
                .orElse(getDefaultValue());
 
- /* usingElseGet() */
+/**
+ * using {@code orElseGet(class :: method)} 
+ */
 String name3 = Optional
                .ofNullable(name)
-               // getDefaultValue will not be called
+               /**
+                 * {@code orElseGet} with {@code OrElseOptionalDemmo::getDefaultValue} 
+                 * means this method may not be called 
+                 */
                .orElseGet(OrElseOptionalDemo::getDefaultValue);
 ```
-> `Class :: Method` (the above `OrElseOptionalDemmo::getDefaultValue` means this method may not be called
 
 
 ## `.filter( para -> condition )`
-
-```java=
+```java
+/**
+ * <p>
+ * use {@code filter} 
+ * </p>
+ */
 String password = "12345";
 Optional<String> opt = Optional.ofNullable(password);
-// if parameter pwd's length > 6 exists
 System.out.println(opt.filter(pwd -> pwd.length() > 6).isPresent());
-```
 
-`.and(condition)` to filter multiple conditions
-```java=
+/**
+ * <p> 
+ * use {@code and } 
+ * to filter multiple conditions
+ * </p>
+ */
 Predicate<String> len6 = pwd -> pwd.length() > 6;
 Predicate<String> len10 = pwd -> pwd.length() < 10;
 
@@ -236,18 +365,31 @@ boolean result = opt.filter(len6.and(len10)).isPresent();
 ```
 
 ## `map(class::method)` and `map(para->method)`
-```java=
+```java
 String name = "ToMap";
-// creating a option<string> instance named nameOptional
+/**
+ * <p> 
+ * Creating a {@code Optional<String>} instance named nameOptional 
+ * </p>
+ */
 Optional<String> nameOptional = Optional.of(name);
 
- // nameOptional.get().length();
+/**
+ * <p>
+ * {@code map(String:length)} instead of {@code nameOptional.get().length()} 
+ * </p>
+ */
 Optional<Integer> intOpt = nameOptional.map(String::length);
 System.out.println( intOpt.orElse(0));
 ```
 
-### filter and map together 
-```java=
+### filter and map 
+```java
+/**
+ * <p> 
+ * The use of {@code filter} and {@code map} 
+ * </p>
+ */
 String password = "password";
 Optional<String>  opt = Optional.ofNullable(password);
 
