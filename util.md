@@ -238,10 +238,10 @@ Optional<String> optOrNull = Optional.ofNullable(name);
 System.out.println(optOrNull); 
 ```
 
-## if optional instance exists ?
+## Existing 
 
 `.isPresent()` if exists then returns true
-```java=
+```java
 Optional<String> opt = Optional.of("hey"); 
 if(opt.isPresent())  System.out.println("true");
 ```
@@ -257,11 +257,13 @@ if(opt.isEmpty()) System.out.println("true");
 ### Opetional With lambda 
 
 ```java
+Optional<String> optOrNull = Optional.ofNullable("WhatsUp");
+
 /**
  * <p> 
  * Without lambda
  * </p>
-Optional<String> optOrNull = Optional.ofNullable("WhatsUp");
+ */
 if (optOrNull.isPresent()) {
     System.out.println(optOrNull.get().length());
 }
@@ -271,7 +273,7 @@ if (optOrNull.isPresent()) {
  * With lambda 
  * </p>
  */
- optOrNull.isPresent(str - > System.out.println(str.length()));
+optOrNull.isPresent(str - > System.out.println(str.length()));
 ```
 
 Since Java 9
