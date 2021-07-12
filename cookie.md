@@ -22,11 +22,11 @@ Bob --> Alice: Response
 
 ## Types of Cookie
 
-- Non-persistent cookie (browser cache)
+- Non-persistent cookie (**browser cache**)
   > It is valid for single session only.  
   > It is removed each time when user closes the browser.  
   >> which means the cookies do not have expiration time. It lives in the browser memory  
-- Persistent cookie (stored in user hard driver)
+- Persistent cookie (**stored in user hard driver**)
   > It is valid for multiple sessions. 
   > It is not removed each time when user closes the browser. 
   > **It is removed only if user logout or signout.** or **get destroyed based on the expiry time**  
@@ -43,85 +43,82 @@ Bob --> Alice: Response
 ## Form and Attributes
 
 Each Cookie forms as the following  
-`Name = value pair`
+`Name = value`
 - This depicts the actual information stored within the cookie. 
 - **Neither the name nor the value should contain white space or any of the following characters: `[ ] ( ) = , ” / ? @ : ;`**  
 
 Example of valid cookie name-value pair in payload looks like  
 ```json
-Set-Cookie:session-id = 187-4969589-3049309
+Set-Cookie: session-id = 187-4969589-3049309
 ```
 
 #### Domain
 
-> request payload的`Domain 與 Cookie Domain 一樣  
-> request payload的 Domain 是 Cookie Domain 的子網域  
+By default, a cookie applies to the server it came from.
+> If a cookie is originally set by `www.foo.example.com`, the browser will only send the cookie back to `www.foo.example.com`.  
+> However, **a site can also indicate that a cookie applies within an entire subdomain, not just at the original server.**  
 
-By default, a cookie applies to the server it came from.(ONLY ALLOWING SAME DOMAIN) 
-> If a cookie is originally set by www.foo.example.com, the browser will only send the cookie back to www.foo.example.com.  
-> However, a site can also indicate that a cookie applies within an entire subdomain, not just at the original server.  
+### 跨域訪問
 
-
-For example, this request sets a user cookie for the entire foo.example.com domain:   
-The browser will echo this cookie back not just to www.foo.example.com, but also to lothar.foo.example.com, eliza.foo.example.com, enoch.foo.example.com, and any other host somewhere in the foo.example.com domain. 
-However, a server can only set cookies for domains it immediately belongs to. www.foo.example.com cannot set a cookie for www.geeksforgeeks.org, example.com, or .com, no matter how it sets the domain.  
+For example, the request sets a user cookie as the following
+```json
+Set-Cookie: user = geek ;Domain = x.y.z.com
 ```
-Set-Cookie: user = geek ;Domain =.foo.example.com
-```
+it can set a cookie domain to itself or parents `x.y.z.com`, `y.z.com`, `z.com`    
+But not `com`, which is a public suffix(Examples of public suffixes - `com`, `edu`, `uk`, `co.uk`, `blogspot.com`, `compute.amazonaws.com`)    
+
+a cookie with domain `y.z.com` is applicable to `y.z.com`, `x.y.z.com`, `a.x.y.z.com` etc.
+
 
 #### Path
 
-The scope of each cookie is limited to a set of paths, controlled by the Path attribute.  
-
-If the server omits the Path attribute, the user agent will use the "directory" of the request-uri's path component as
-   the default value.  (See Section 5.1.4 for more details.)
-
-The user agent will include the cookie in an HTTP request only if the path portion of the request-uri matches (or is a subdirectory of) the
-cookie's Path attribute, where the `/` character is interpreted as a directory separator.
+The scope of each cookie is limited to **a set of paths**, controlled by the Path attribute.   
+If the server omits the Path attribute, the user agent will use the **directory** of the request-uri's path component as the default value. (See Section 5.1.4 for more details.)  
 ```
 Set-Cookie: user = geek; Path =/ restricted
 ```
 
-#### Expires 
+path表示cookie所在的目錄，asp.net默認為`/`，就是根目錄 
+在同一個服務器上有目錄如下`/test/`,`/test/cd/`,`/test/dd/`， 現設一個cookie1的path為`/test/`，cookie2的path為`/test/cd/`，那麽test下的所有頁面都可以訪問(Access)到cookie1，而`/test/`和`/test/dd/`的子頁面不能訪問cookie2。這是因為cookie能讓其path路徑下的頁面訪問
+
+#### Expires (確切的時間)
 The browser should remove the cookie from its cache after that date has passed. 
 ```json
 Set-Cookie: user = geek; expires = Wed, 21-Feb-2017 15:23:00 IST
 ```
-####  Max-Age 
+####  Max-Age (秒數)
 This attribute sets the cookie to expire after a certain number of **seconds** have passed instead of at a specific moment.  
 For instance, this cookie expires one hour (3,600 seconds) after it’s first set. 
 ```json
 Set-Cookie: user = "geek"; Max-Age = 3600
 ```
 
-## Methods to set up the Cookies Attributes
+## Methods to set up the Cookies Attributes in java
 
 ### Create a Cookie object:
 ```java
-// new Cookie(key , value) 
-Cookie c = new Cookie("userName","Chaitanya"); //Specifies a path for the cookie to which the client should return the cookie.=
+// new Cookie(key , value)  
+// Specifies a path for the cookie to which the client should return the cookie
+Cookie c = new Cookie("userName","Chaitanya"); 
 ```
-
 ### Set the maximum Age:
 ```java
 cookie.setMaxAge(-1); //expire this cookie as browser is closed
 cookie.setMaxAge(0);  //expire this cookie onice when browser receives 
-cookie.setMaxAge(1800);  // live (60*3*10) 1800 seconds, half min
+cookie.setMaxAge(1800);  // live (60*3*10) 1800 seconds, half an hour
 ```
 ### Place the Cookie in HTTP response header:
 ```java
 response.addCookie(c);
 ```
-
 ### (servlet) Read cookies 
 ```java
 Cookie c[]=request.getCookies(); 
-//c.length gives the cookie count 
+// c.length returns total numbers of cookies 
 for(int i=0;i<c.length;i++){  
  out.print("Name: "+c[i].getName()+" & Value: "+c[i].getValue());
 }
 ```
-
 ### Client asks for Cookie and Send Cookie
 MyServlet1.java
 First time that a new client send a request (to require a cookie)
@@ -189,47 +186,55 @@ public class MyServlet2 extends HttpServlet {
 ## Setter Methods 
 ```java
 /**
-// Sets the domain in which this cookie is visible. Domains are explained in detail in the attributes of cookie part previously.
-// pattern : string representing the domain in which this cookie is visible.
+ * @Description
+ *   Sets the domain in which this cookie is visible. 
+ *   Domains are explained in detail in the attributes of cookie part previously.
+ * @param pattern : the domain in which this cookie is visible.
 **/
 setDomain(String Pattrn) 
 
 /**
-//Specifies the purpose of this cookie.
-//purpose : string representing the purpose of this cookie.
-**/
+  * @Description Specifies the purpose of this cookie.
+  * @param purpose : the purpose of this cookie.
+  */
 setComment(String purpose) 
 
-
 /**
-//Specifies a path for the cookie to which the client should return the cookie.
-//path : path where this cookie is returned
-**/
+  * @Description : 
+  *   Specifies a path for the cookie to which the client should return the cookie.
+  * @param path : path where this cookie is returned
+  */
 setPath(string path)
 
 /**
-// Indicated if secure protocol to be used while sending this cookie. Default value is false.
-// secure - If true, the cookie can only be sent over a secure protocol like https. 
-   If false, it can be sent over any protocol.
+  * @Description 
+  *   Indicated if secure protocol (for example https) to be used while sending this cookie. 
+  *   Default value is {@code false}.
+  * @param secure 
+  *    If {@code true}, the cookie can only be sent over a secure protocol like <pre> https <pre>. 
+  *    If {@code false}, it can be sent over any protocol.
 **/
 setSecure(boolean secure)
 
 /**
-//Returns 0 if the cookie complies with the original Netscape specification; 
-  1 if the cookie complies with RFC 2965/2109
-**/
-/*public int */ getVersion() 
+  * @Return
+  *   0 if the cookie complies with the original Netscape specification; 
+  *   1 if the cookie complies with RFC 2965/2109
+  */
+public int getVersion() 
 
-/**
-//Used to set the version of the cookie protocol this cookie uses.
-// v - 0 for original Netscape specification; 1 for RFC 2965/2109
-**/
+/** 
+  * @Description Used to set the version of the cookie protocol this cookie uses.
+  * @param v : 
+  *   0 for original Netscape specification
+  *   1 for RFC 2965/2109
+  */
 setVersion(int v) 
 
 /**
-//returns a copy of this cookie.
-**/
-/* public Cookie */ clone()
+  * @return a copy of this cookie.
+  */
+public Cookie clone()
 ```
 
 ## HttpServletRquest and HttpServletResponse
@@ -246,11 +251,16 @@ and Http Servlet can do these things
 protected void createCookie(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
 
-  // create Cookie
+  /**
+    * <p> create Cookie </p>
+    */
   Cookie cookie = new Cookie("cookie-name", "cookie-Value");
   Cookie cookie2 = new Cookie("cookie-name2", "cookie-Value2");
 
-  // add the cookies in the response payload 
+  /**
+    * <p> 
+    * add the cookies in the response payload 
+    * </p>
   response.addCookie(cookie);
   response.addCookie(cookie2);
   response.getWriter().write("Created……");
@@ -275,9 +285,12 @@ protected void updateCookie(HttpServletRequest request, HttpServletResponse resp
 
 [To remove the cookie](https://stackoverflow.com/questions/890935/how-do-you-remove-a-cookie-in-a-java-servlet)
 
-`.setMaxAge(0)` 
-
 ```java
+/**
+  * @apinote
+  *   set {@code setMaxAge}'s @param <pre> 0 </pre>
+  *   set {@code setValue}'s @param <pre> "" </pre>
+  */
 private void eraseCookie(HttpServletRequest req, HttpServletResponse res) {
     Cookie[] cookies = req.getCookies();
     if (cookies != null)
