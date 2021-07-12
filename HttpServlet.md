@@ -39,8 +39,8 @@ Cookie: yummy_cookie=choco; tasty_cookie=strawberry
 
 ## POST AND PUT METHOD
 [POST AND PUT](https://progressbar.tw/posts/53)
-POST : 複製人不同編號(ID) , 每POST一次就新增一個複製人新編號(ID)
-PUT  : 同一人同編號(ID), 每PUT就UPDATE這個人資訊
+POST : 複製人不同編號(ID) , 每POST一次就新增一個複製人新編號(ID)  
+PUT  : 同一人同編號(ID), 每PUT就UPDATE這個人資訊  
 
 ### 敏感資訊
 就 HTTP/1.1 對 GET 的規範來說，是從指定的 URI「取得」想要的資訊，指定的 URI 包括了請求查詢（Query）部份，例如 
