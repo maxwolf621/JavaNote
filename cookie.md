@@ -47,18 +47,29 @@ Each Cookie forms as the following
 - This depicts the actual information stored within the cookie. 
 - **Neither the name nor the value should contain white space or any of the following characters: `[ ] ( ) = , ” / ? @ : ;`**  
 
-Example of valid cookie name-value pair in payload looks like  
+Example of valid cookie name-value pair in payload  
+- A cookie that contain the seesion_id from servlet 
 ```json
 Set-Cookie: session-id = 187-4969589-3049309
 ```
-
-#### Domain
+### Domain of the Cookie
 
 By default, a cookie applies to the server it came from.
 > If a cookie is originally set by `www.foo.example.com`, the browser will only send the cookie back to `www.foo.example.com`.  
 > However, **a site can also indicate that a cookie applies within an entire subdomain, not just at the original server.**  
 
-### 跨域訪問
+[Coolies Domain](https://stackoverflow.com/questions/1062963/how-do-browser-cookie-domains-work)
+
+- The origin domain of a cookie is the domain of the originating request.
+- If the origin domain is an IP, the cookie's domain attribute must not be set.
+- If a cookie's domain attribute is not set, the cookie is only applicable to its origin domain.
+- If a cookie's domain attribute is `set`,
+  > the cookie is applicable to that domain and all its subdomains;
+  > the cookie's domain must be the same as, or a parent of, the origin domain
+  > the cookie's domain must not be a TLD, a public suffix, or a parent of a public suffix.
+
+
+#### 跨域訪問
 
 For example, the request sets a user cookie as the following
 ```json
@@ -70,7 +81,7 @@ But not `com`, which is a public suffix(Examples of public suffixes - `com`, `ed
 a cookie with domain `y.z.com` is applicable to `y.z.com`, `x.y.z.com`, `a.x.y.z.com` etc.
 
 
-#### Path
+### Path of the Cookie 
 
 The scope of each cookie is limited to **a set of paths**, controlled by the Path attribute.   
 If the server omits the Path attribute, the user agent will use the **directory** of the request-uri's path component as the default value. (See Section 5.1.4 for more details.)  
@@ -81,12 +92,12 @@ Set-Cookie: user = geek; Path =/ restricted
 path表示cookie所在的目錄，asp.net默認為`/`，就是根目錄 
 在同一個服務器上有目錄如下`/test/`,`/test/cd/`,`/test/dd/`， 現設一個cookie1的path為`/test/`，cookie2的path為`/test/cd/`，那麽test下的所有頁面都可以訪問(Access)到cookie1，而`/test/`和`/test/dd/`的子頁面不能訪問cookie2。這是因為cookie能讓其path路徑下的頁面訪問
 
-#### Expires (確切的時間)
+### Expires (確切的時間) of the cookie 
 The browser should remove the cookie from its cache after that date has passed. 
 ```json
 Set-Cookie: user = geek; expires = Wed, 21-Feb-2017 15:23:00 IST
 ```
-####  Max-Age (秒數)
+###  Max-Age (秒數) of the cookie 
 This attribute sets the cookie to expire after a certain number of **seconds** have passed instead of at a specific moment.  
 For instance, this cookie expires one hour (3,600 seconds) after it’s first set. 
 ```json
@@ -113,12 +124,73 @@ response.addCookie(c);
 ```
 ### (servlet) Read cookies 
 ```java
+/**
+  * {@code getCookies}
+  * {@code getName}
+  * {@code getValue}
+  */
 Cookie c[]=request.getCookies(); 
 // c.length returns total numbers of cookies 
 for(int i=0;i<c.length;i++){  
  out.print("Name: "+c[i].getName()+" & Value: "+c[i].getValue());
 }
 ```
+
+### setter methods
+
+```java
+/**
+ * @Description
+ *   Sets the domain in which this cookie is visible. 
+ *   Domains are explained in detail in the attributes of cookie part previously.
+ * @param pattern : the domain in which this cookie is visible.
+**/
+setDomain(String Pattrn) 
+
+/**
+  * @Description Specifies the purpose of this cookie.
+  * @param purpose : the purpose of this cookie.
+  */
+setComment(String purpose) 
+
+/**
+  * @Description : 
+  *   Specifies a path for the cookie to which the client should return the cookie.
+  * @param path : path where this cookie is returned
+  */
+setPath(string path)
+
+/**
+  * @Description 
+  *   Indicated if secure protocol (for example https) to be used while sending this cookie. 
+  *   Default value is {@code false}.
+  * @param secure 
+  *    If {@code true}, the cookie can only be sent over a secure protocol like <pre> https <pre>. 
+  *    If {@code false}, it can be sent over any protocol.
+**/
+setSecure(boolean secure)
+
+/**
+  * @Return
+  *   0 if the cookie complies with the original Netscape specification; 
+  *   1 if the cookie complies with RFC 2965/2109
+  */
+public int getVersion() 
+
+/** 
+  * @Description Used to set the version of the cookie protocol this cookie uses.
+  * @param v : 
+  *   0 for original Netscape specification
+  *   1 for RFC 2965/2109
+  */
+setVersion(int v) 
+
+/**
+  * @return a copy of this cookie.
+  */
+public Cookie clone()
+```
+
 ### Client asks for Cookie and Send Cookie
 MyServlet1.java
 First time that a new client send a request (to require a cookie)
@@ -181,60 +253,6 @@ public class MyServlet2 extends HttpServlet {
      }
   }
 }
-```
-
-## Setter Methods 
-```java
-/**
- * @Description
- *   Sets the domain in which this cookie is visible. 
- *   Domains are explained in detail in the attributes of cookie part previously.
- * @param pattern : the domain in which this cookie is visible.
-**/
-setDomain(String Pattrn) 
-
-/**
-  * @Description Specifies the purpose of this cookie.
-  * @param purpose : the purpose of this cookie.
-  */
-setComment(String purpose) 
-
-/**
-  * @Description : 
-  *   Specifies a path for the cookie to which the client should return the cookie.
-  * @param path : path where this cookie is returned
-  */
-setPath(string path)
-
-/**
-  * @Description 
-  *   Indicated if secure protocol (for example https) to be used while sending this cookie. 
-  *   Default value is {@code false}.
-  * @param secure 
-  *    If {@code true}, the cookie can only be sent over a secure protocol like <pre> https <pre>. 
-  *    If {@code false}, it can be sent over any protocol.
-**/
-setSecure(boolean secure)
-
-/**
-  * @Return
-  *   0 if the cookie complies with the original Netscape specification; 
-  *   1 if the cookie complies with RFC 2965/2109
-  */
-public int getVersion() 
-
-/** 
-  * @Description Used to set the version of the cookie protocol this cookie uses.
-  * @param v : 
-  *   0 for original Netscape specification
-  *   1 for RFC 2965/2109
-  */
-setVersion(int v) 
-
-/**
-  * @return a copy of this cookie.
-  */
-public Cookie clone()
 ```
 
 ## HttpServletRquest and HttpServletResponse
