@@ -37,6 +37,11 @@ Cookie: yummy_cookie=choco; tasty_cookie=strawberry
 ## POST AND GET METHOD
 ![image](https://user-images.githubusercontent.com/68631186/125323654-9e34c480-e371-11eb-9367-2919630ef1a6.png)
 
+## POST AND PUT METHOD
+[POST AND PUT](https://progressbar.tw/posts/53)
+POST : 複製人不同編號(ID) , 每POST一次就新增一個複製人新編號(ID)
+PUT  : 同一人同編號(ID), 每PUT就UPDATE這個人資訊
+
 ### 敏感資訊
 就 HTTP/1.1 對 GET 的規範來說，是從指定的 URI「取得」想要的資訊，指定的 URI 包括了請求查詢（Query）部份，例如 
 `GET /?id=0093` 瀏覽器會將指定的 URI 顯示在網址列上。
@@ -46,13 +51,11 @@ Cookie: yummy_cookie=choco; tasty_cookie=strawberry
 `HTTP/1.1` 對 `POST` 的規範，是要求指定的 `URI`「接受」請求中附上的實體（`Entity`），像是儲存為檔案、新增為資料庫中的一筆資料等  
 由於要求伺服器接受的資訊是附在請求本體（`Body`）而不是在 `URI`，瀏覽器網址列不會顯示附上的資訊，**傳統上敏感資訊也因此常透過 POST 發送**
 
-### 發送的資料長度
-
+### 發送的資料長度 
 雖然`HTTP`標準中沒有限制`URI`長度，然而各家瀏覽器對網址列的長度限制不一，伺服器對`URI`長度也有限制，因此資料長度過長的話，就不適用`GET`請求。
 - **`POST`的資料是附在請求本體（`Body`）而不是在`URI`，不會受到網址列長度限制，因而 POST 在過去常被用來發送檔案等大量資訊**
 
-### 書籤設置考量
-
+### 書籤設置考量 
 由於瀏覽器書籤功能是針對網址列，因此想讓使用者可以針對查詢結果設定書籤的話，可以使用 `GET`  
 `POST`後新增的資源不一定會有個`URI`作為識別，基本上無法讓使用者設定書籤。
 
