@@ -1,5 +1,3 @@
-# JavaNote
-
 ## Network
 [Serialization](Serialization.md)  
 [Session](Session.md)  
