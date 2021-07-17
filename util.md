@@ -97,6 +97,11 @@ A vector provides us with dynamic arrays in Java
 
 - However, the primary **difference between a vector and an ArrayList is that a Vector is synchronized and an ArrayList is non-synchronized**.
 
+### PLUGS
+**ArrayList中的資料是以連續**的方式儲存在記憶體，可支援隨機存取及循序存取，**所以循序讀取或排序(sort)時的效能好**。每個節點不用另外儲存下一個節點的指標，也因此，每個節點所占用的記憶體較少，但也**因為是線性儲存於記憶體，所以在如果要對之中的元素進行插入或刪除節點等動作時效能較差**，因為我們必須移動大量節點(當刪掉/新增一個元素，其他元素的位置都會被迫改變)。
+
+**LinkedList中的資料以不連續**的方式儲存，因此不需使用連續的記憶體空間，每個節點都會記錄著下個節點的指標，所以**在串列中插入或刪除節點時只需修改相關節點的指標，所以插入或刪除特定元素時的效能較好**。但它的缺點是**因非線性儲存，所以我們在讀取時無法快速索引到該節點(因為不知道位置)，只能以循序存取讀取每一個節點的指標**，所以讀取的效能較差。另外，**因為每個元素還要儲存下一個元素的指標，因此占記憶體容量比較大。**
+
 # Map Interface 
 [HashMap](https://techmastertutorial.in/java-collection-internal-hashmap.html)  
 [HashMap SourceCode](https://www.gushiciku.cn/pl/gVdy/zh-hk)  
