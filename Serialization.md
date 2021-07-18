@@ -31,7 +31,6 @@ Usage of Serialization
 }
 ```
 
-
 ## Serialize
 [more details](https://iter01.com/419189.html)
 
