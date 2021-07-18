@@ -1,6 +1,6 @@
 # Serialize and deSerialize
-![](https://lh3.googleusercontent.com/pw/ACtC-3fWwV19Qwwj0FhNmsbCM-sO3s04TtHrfuARmKuamHBDQ7ao8ZwQHhmghqptiHQvhsMn5wB3hENTyXpFPACLKlLIIprzqkYOrXQ5umd4K6q_ZYZhH1b6SOiyTHb4Lj57Zc7-zM0j7F0pxLBdxNuH8hCh=w750-h300-no?authuser=0)  
-Persitent : Data stores in devices such hard driver .. etc  
+![image](https://user-images.githubusercontent.com/68631186/126059656-fcaaecd9-ced3-40b1-a404-f3519d6fba35.png)
+- Persitent Storage : storage that stores serialized data( e,g:  hard driver .. etc )  
 
 Usage of Serialization    
 - Client and Server Transport (Cookie ... etc)  
@@ -52,12 +52,12 @@ public class WriteObject {
        
                 Person person = new Person("Tom", 23);
                 oos.writeObject(person); // write into device (serialize)
+                
                 person.setName("Jimmy"); // person's name changes from Tom to Jimmy
-                System.out.println(person); 
                 
                 /**
-                  *  {@code writeObject} will not serialize object person again
-                  *  it only save the serial code
+                  *  {@code writeObject} 
+                  *  will not serialize object person again
                   */
                 oos.writeObject(person);  
                 
@@ -69,7 +69,7 @@ public class WriteObject {
                 /**
                   * <p> p1 and p2 has same serial code</p>
                   * @return {@code true}
-                  *
+                  */
                 System.out.println(p1 == p2);  
         } catch (Exception e) {
             e.printStackTrace();
@@ -159,13 +159,16 @@ public class ExPerson implements Externalizable {
 
     /**
       * <p>
-      * Custom serializer/deserializer 
-      * via Overriding writeExternal/readExternal
+      * Configure custom serializer and deserializer 
+      * By Overriding {@code writeExternal} and 
+      * {@code readExternal}
       * </p>
+      */
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
         /**
-          * {@code reverse} name and serialize 
+          * {@code reverse} name 
+          * serialize by {@code writeInt} and {@code writeObject} 
           */
         StringBuffer reverse = new StringBuffer(name).reverse();
         System.out.println(reverse.toString());
@@ -176,7 +179,7 @@ public class ExPerson implements Externalizable {
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
         this.name = ((StringBuffer) in.readObject()).reverse().toString();
-        System.out.println(name);
+        System.out.println(name);                System.out.println(person); 
         this.age = in.readInt();
     }
 
@@ -206,7 +209,7 @@ public class ExPerson implements Externalizable {
 
 ## serialVersion UID
 
-To set up the each serialize instance's version to allow same instance with different version existing in the device
+Set up each serialized instance's version to allow same instance with different version existing in the device
 ```java
 /**
   * <p> 
@@ -217,7 +220,7 @@ To set up the each serialize instance's version to allow same instance with diff
 public class ExPerson implements Serializable {
     /**
       * <p>
-      * the instance of Experson 
+      * for each instance of Experson has the 
       * @version 123456L
       * </p>
       */
@@ -232,11 +235,11 @@ public class ExPerson implements Serializable {
 
 ## SerializationUtils 
 
-Using `SerializationUtils` class helping us to `serial`, `deserial` and `clone`
+Using `SerializationUtils` class's methods helping us to `serial`, `deserial` and `clone`
 
 ```java
 /**
-  * <p> {@code clone} 
+  * <p> copy the object via {@code SerializationUtils.clone} 
   * </p>
   */
 UserDO user = new User("example", 12); 
@@ -250,7 +253,7 @@ UserDO userClone = SerializationUtils.clone(user);
 byte[] bytes = SerializationUtils.serialize(user);
 UserDO userDeserialize = SerializationUtils.deserialize(bytes);
 ```
-- Implemntation of Clonable is better than `StringlizationUtils`'s clone method
+- Implemntation of `Clonable` is better than `StringlizationUtils`'s clone method
 - Protostuff、Hessian、Kryo's effinciency are better than `SerializationUtils` 
 
 
