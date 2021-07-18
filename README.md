@@ -6,7 +6,7 @@
 [HttpServlet](HttpServlet.md)  
 
 ## Basic
-[Garbage Collection and Object Copies](GCandCopy.md)
+[Garbage Collection and Object Copies](GCandCopy.md)  
 [Iterator](Iterator.md)  
 [HashCode Equals](hashCodeAndEquals.md)  
 [util](util.md)  
