@@ -1,18 +1,19 @@
-# Garbage Collection and Cophy
+# Garbage Collection and Copy
 
-## Java Copying 
+## Copy Object
 
 [Reference](https://www.techiedelight.com/copy-objects-in-java/)
+[Reference](https://www.techiedelight.com/clone-method-in-java/)
 
 ###  Shallow copy (field-by-field copy)
 Shallow Copy llocates a new, uninitialized object and copy all fields (class' attributes) from the original object in it.  
 
 **But if the field is a reference to an object, as it copies the reference, hence referring to the same object as an original object does.** 
-> **The referenced objects are thus shared, so if one object is modified, the change is visible in the other.**  
+> **The referenced objects are shared, so if one object is modified, the change is visible in the other.**  
 
 ![image](https://user-images.githubusercontent.com/68631186/126028142-8e136aca-b393-41e9-a8ab-a7e23a71d710.png)
 
-### Deep Copy 
+### Deep Copy
 An alternative to shallow copy is a deep copy, where **new objects are created for any referenced objects rather than references to objects being copied**.  
 
 > **A deep copy is a preferable approach over a shallow copy.**  
@@ -20,8 +21,14 @@ An alternative to shallow copy is a deep copy, where **new objects are created f
 ![image](https://user-images.githubusercontent.com/68631186/126028137-434a5370-62eb-484b-a987-e9fed44ce8ac.png)
 
 
+> Shallow Copy : Reference to same object (reference is shared)
+> Deep Copy    : Create the new object for any referenced objects
+
 ### Approach To Copy
 
+1. Copy Constructor
+2. clone method
+3. Serialization/Utils
 
 #### Copy Consturctor
 
@@ -30,6 +37,9 @@ class Student
 {
     private String name;
     private int age;
+    /**
+      * <p> mutable </p>
+      */
     private Set<String> subjects;
  
     public Student(String name, int age, Set<String> subjects)
@@ -40,7 +50,7 @@ class Student
     }
  
     /**
-      * Copy constructor
+      * <p> Copy constructor </p>
       */
     public Student(Student student)
     {
@@ -48,19 +58,20 @@ class Student
         this.age = student.age;
  
         /**
-          * shallow copy
+          * <p> shallow copy </p>
           */
         // this.subjects = student.subjects;
  
         /**
           * <p> deep copy 
-          *     create a new instance of `HashSet` </p>
+          *     creates a new instance of {@code HashSet} 
+	  * </p>
           */
         this.subjects = new HashSet<>(student.subjects);
     }
  
     /**
-      * Copy factory
+      * Copy factory with {@code static} keyword
       */
     public static Student newInstance(Student student) {
         return new Student(student);
@@ -82,6 +93,9 @@ class Main
     public static void compare(Object ob1, Object ob2)
     {
         if (ob1 == ob2) {
+	    /**
+	      * <p> reference to the same object </p>
+	      */
             System.out.println("Shallow Copy");
         }
         else {
@@ -108,22 +122,23 @@ class Main
 }
 ```
 
-### Using `Object.clone()` method
+#### `clone` method from `Cloneable` interface
 If the concrete type of the object to be cloned is known in advance, we can use the `Object.clone()` method, which creates and returns a copy of the object.  
-
-```
-/**
-  * @Description
-  *   The prototype of {@code clone}
-  */
-protected Object clone() throws CloneNotSupportedException
-```
 
 All classes involved must implement the `Cloneable` interface, otherwise `CloneNotSupportedException` will be thrown. 
 ```java
 /**
+  * @Description
+  *   The prototype of {@code clone}
+  *   
+  * @throws ClineNotSupportedException
+  */
+protected Object clone() throws CloneNotSupportedException
+
+// For example 
+
+/**
   * <p> Shallow Copy </p>
-  * <p> The Reference is shared </p>
   */
 class StudentShallow implements Cloneable {
  
@@ -144,10 +159,8 @@ class StudentShallow implements Cloneable {
     }
 }
 
-
 /**
   * <p> Deep Copy </p>
-  * <p> Copy The Reference</p>
   */
 class StudentDeep implements Cloneable {
  
@@ -159,20 +172,27 @@ class StudentDeep implements Cloneable {
     {
         this.name = name;
         this.age = age;
+	
         this.map = new HashMap<String, Integer>() {{ put(name, age); }};
     }
  
     @Override
     public Student clone() throws CloneNotSupportedException {
-        Student student = (Student) super.clone();
+        
+	/**
+	  * <p> primitive fields are ignored, as their content is already copied </p>
+          * <p> immutable fields like {@code String} are ignored </p> 
+	  */
+	Student studentDeepCopy = (Student) super.clone();
  
-        // primitive fields are ignored, as their content is already copied
-        // immutable fields like string are ignored
+        /** 
+	  * <p> Create new objects for any 
+	  *     non-primitive, mutable fields 
+	  * </p> 
+          */
+	studentDeepCopy.map = new HashMap<>(map);
  
-        // create new objects for any non-primitive, mutable fields
-        student.map = new HashMap<>(map);
- 
-        return student;        // return deep copy
+        return studentDeepCopy ;        // return deep copy
     }
 }
  
@@ -187,12 +207,11 @@ try {
 
 ```
 
-### Using Serialization
+#### Using Serialization
 Serialization is the process of converting an object into a sequence of bytes and rebuilding those bytes later into a new object.
 
 > Deep copy using `Object.clone()` is very tedious to implement, error-prone, and difficult to maintain.  
 > `Object.clone()` method also will not work if we assign a value to a `final` field.
-
 
 - Java provides automatic serialization, which requires that the object be marked by implementing the `java.io.Serializable interface`. 
   > Implementing the interface marks the class as “okay to serialize”, and Java then handles serialization internally. 
@@ -206,33 +225,31 @@ Serialization is the process of converting an object into a sequence of bytes an
   * <p> so we will use {@code writeObject} and {@code readObject} 
   *      to serialize/deserialize the data </p>
   */
-
-
-// Create a byte array output stream and use it to create an object output stream
+  
+/**
+ * {@code ByteArrayOutputStream} creates a byte array output stream 
+ * {@code ObjectOutputStream(byteArray OutputStreams} 
+ * 	      creates an object output output stream 
+ * {@code objectOutputStream.writeObject} converts the object into a serialized form
+ * {@code objectOutputStream.flush} flush the data in the device/storage
+ */
 ByteArrayOutputStream bos = new ByteArrayOutputStream();
 ObjectOutputStream oos = new ObjectOutputStream(bos);
-
-// @{code ObjectOutputStream.writeObject()} method 
-//  to convert the object into a serialized form
 oos.writeObject(student);        
 oos.flush();
 
-
 /**
  * {@code toByteArray()} creates and returns a copy of the stream's byte array
- * {@code ByteArrayInputStream} creates a byte array input stream 
- *                              and use it to create an object input stream
+ * {@code ByteArrayInputStream} creates an object input stream
  * {@code readObject()} deserialize the {@code ByteArrayInputStream} object
  */
 byte[] bytes = bos.toByteArray(); 
-
 ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
- 
 ObjectInputStream ois = new ObjectInputStream(bis);
 clone = (Student) ois.readObject();        // deserialize & typecast
 ```
 
-## Using Apache commons SerializationUtils
+#### Apache commons `SerializationUtils`
 It provides `serialize()` and `deserialize()` methods to serialize and deserialize an object, respectively. Code is shown below:
 
 ```java
