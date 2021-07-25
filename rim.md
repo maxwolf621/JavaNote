@@ -2,7 +2,7 @@
 # java.rmi.*
 
 [reference from luckyqiao](https://segmentfault.com/a/11900000165980690)  
-[Example for remote proxy](Proxy.md)  
+[`java.rim.*` is used for remote proxy's example](https://github.com/maxwolf621/DesignPattern/blob/main/S_Proxy.md)  
 ## What is RMI
 
 [source](https://examples.javacodegeeks.com/java-rmi-java-remote-method-invocation-example/)  
