@@ -16,8 +16,8 @@ Remote Method Invocation is an object-oriented way of RPC (Remote Procedure Call
 
 ## Classes in `java.rimi.*` 
 
-![image](https://user-images.githubusercontent.com/68631186/126902838-280d150b-a079-4012-bb48-6f2d2b9c9bd5.png)  
 ![image](https://user-images.githubusercontent.com/68631186/126902902-ed82808d-9d30-4445-baa0-e37123ef265e.png)  
+
 
 ```java
 /**
@@ -26,7 +26,7 @@ Remote Method Invocation is an object-oriented way of RPC (Remote Procedure Call
   *     Any object that is a remote object must directly or indirectly implement this interface. 
   *     Only those methods specified in a "remote interface", 
   *     an interface that extends java.rmi.Remote are available remotely. </p>
-  * <p> each method must @throws RemoteException </p>
+  * <p> the constructor of concrete remote must @throws RemoteException </p>
   * ----------------------------------
   * <p> Naming </p>
   * <p> The Naming class provides methods for storing and obtaining references to remote objects in a remote object registry. 
@@ -49,6 +49,9 @@ Remote Method Invocation is an object-oriented way of RPC (Remote Procedure Call
   *    <strong> It simply creates a local reference to the remote registry 
   *    and will succeed even if no registry is running on the remote host. </strong> 
   *    Therefore, a subsequent method invocation to a remote registry returned as a result of this method may fail. </p>
+  *--------------------------------------
+  *<p> class b extends UnicastRemoteObject </p>
+  *<p> Give the subclass b the ability to act as a remote service </p>
   */
 ```
 
@@ -141,7 +144,15 @@ public class RMIServer {
 
     }
 }
+```
 
+
+### client get stub object
+![image](https://user-images.githubusercontent.com/68631186/126907506-e76dfd6a-0119-4907-88fb-9ec604de3b0d.png)
+1. Client does a lookup on the RMI registry `Naming.lookup("rmi://127.0.0.1/RemoteHello");`
+2. RMI registry returns the stub object (as the return value of the lookup method) and RMI deserializes the stub automatically.
+3. Client invokes a method on the stub, as if the stub IS the real service
+```java
 /**
   * create Client 
   */
