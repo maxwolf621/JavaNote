@@ -16,6 +16,7 @@ Remote Method Invocation is an object-oriented way of RPC (Remote Procedure Call
 
 ## Classes in `java.rimi.*` 
 
+![image](https://user-images.githubusercontent.com/68631186/126907371-4269a28e-53b8-4500-936b-be33fb74caf2.png)  
 ![image](https://user-images.githubusercontent.com/68631186/126902902-ed82808d-9d30-4445-baa0-e37123ef265e.png)  
 
 
