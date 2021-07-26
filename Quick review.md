@@ -27,9 +27,9 @@ access-specifier storage returnType function(parameters)
 4. private   : Accessed only By members(fields and method) in same class
 
 ## Access Specifier Within pakacge
-| Access Specifier |  Accessible to a subclass inside A same package | Accessible to all other classes in the same package |
-| ----             |     ---                                         |     ----                                            |
-|  default         |     Yes                                         |     Yes                                             |
+| Access Specifier              |  Accessible to a subclass inside A same package | Accessible to all other classes in the same package |
+| ----                          |     ---                                         |     ----                                            |
+|  default(no modifier)         |     Yes                                         |     Yes                                             |
 |  public          |     Yes                                         |     Yes                                             |
 |  protected       |     Yes                                         |     Yes                                             |
 |  private         |     No                                          |     No                                              | 
@@ -38,12 +38,12 @@ access-specifier storage returnType function(parameters)
 
 
 ## Outside the class's package
-| Access Specifier |  Accessible to a subclass inside A same package | Accessible to all other classes in the same package |
-| ----             |     ---                                         |     ----                                            |
-|  default         |     No                                          |     No                                             |
-|  public          |     Yes                                         |     Yes                                             |
-|  protected       |     Yes                                         |     No                                              |
-|  private         |     No                                          |     No                                              | 
+| Access Specifier      |  Accessible to a subclass outside the same package | Accessible to all other classes outside the same package |
+| ----                  |     ---                                         |     ----                                            |
+|  default(no modifier) |     No                                          |     No                                             |
+|  public               |     Yes                                         |     Yes                                             |
+|  protected            |     Yes                                         |     No                                              |
+|  private              |     No                                          |     No                                              | 
 
 
 - The derived can not access base's  private member but it can be accessed via public method or protected method of base class
