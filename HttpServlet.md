@@ -28,7 +28,7 @@ Set-Cookie: tasty_cookie=strawberry
 
 After storing the cookie in Browser.  
 The furture Request sent by it as the following 
-```josn 
+```json 
 GET /sample_page.html HTTP/1.1
 Host: www.example.org
 Cookie: yummy_cookie=choco; tasty_cookie=strawberry
@@ -38,31 +38,35 @@ Cookie: yummy_cookie=choco; tasty_cookie=strawberry
 ![image](https://user-images.githubusercontent.com/68631186/125323654-9e34c480-e371-11eb-9367-2919630ef1a6.png)
 
 ## POST AND PUT METHOD
-[POST AND PUT](https://progressbar.tw/posts/53)
-POST : 複製人不同編號(ID) , 每POST一次就新增一個複製人新編號(ID)  
-PUT  : 同一人同編號(ID), 每PUT就UPDATE這個人資訊  
+[POST AND PUT](https://progressbar.tw/posts/53)  
+POST : 複製人不同編號(ID) , 每POST一次就新增一個複製人新編號(ID)    
+PUT  : 同一人同編號(ID), 每PUT就UPDATE這個人資訊    
 
 ### 敏感資訊
-就 HTTP/1.1 對 GET 的規範來說，是從指定的 URI「取得」想要的資訊，指定的 URI 包括了請求查詢（Query）部份，例如 
-`GET /?id=0093` 瀏覽器會將指定的 URI 顯示在網址列上。
-> 固像是password、session_id 等敏感資訊，就不適合使用`GET`發送
+就 HTTP/1.1 對 GET 的規範來說，是從指定的 URI「取得」想要的資訊，指定的 URI 包括了請求查詢（Query）部份，  
+例如 `GET /?id=0093` 瀏覽器會將指定的 URI 顯示在網址列上。  
+> 所以如果是`password`、`session_id` 等敏感資訊，就不適合使用`GET`發送
 
-另一個問題在於 HTTP 的 Referer 標頭，這是用來表示從哪兒連結到目前的網頁，如果你的網址列出現了敏感資訊，之後連接到另一個網站，該網址就有可能透過 Referer 標頭得到敏感資訊。
-`HTTP/1.1` 對 `POST` 的規範，是要求指定的 `URI`「接受」請求中附上的實體（`Entity`），像是儲存為檔案、新增為資料庫中的一筆資料等  
-由於要求伺服器接受的資訊是附在請求本體（`Body`）而不是在 `URI`，瀏覽器網址列不會顯示附上的資訊，**傳統上敏感資訊也因此常透過 POST 發送**
+![image](https://user-images.githubusercontent.com/68631186/127016945-91a33030-5363-4147-b895-d0e3103691aa.png)  
+
+另一個問題在於 HTTP 的 `Referer` 標頭，這是用來表示從(soruce)哪裡連結到目前的網頁(dst)，如果你的網址列出現了敏感資訊，之後連接到另一個網站，該網址就有可能透過 Referer 標頭得到敏感資訊。
+`HTTP/1.1` 對 `POST` 的規範，是要求指定的 `URI`「接受」請求中附上的實體（`Entity`），像是儲存為檔案、新增為資料庫中的一筆資料等... 
+由於要求伺服器接受的資訊是附在請求本體（`Body`如下圖）而不是在 `URI`，**瀏覽器網址列不會顯示附上的資訊，傳統上敏感資訊也因此常透過 POST 發送**  
+![image](https://user-images.githubusercontent.com/68631186/127017382-aa7cbe05-8493-425e-b2fa-17a7ac85d411.png)  
 
 ### 發送的資料長度 
 雖然`HTTP`標準中沒有限制`URI`長度，然而各家瀏覽器對網址列的長度限制不一，伺服器對`URI`長度也有限制，因此資料長度過長的話，就不適用`GET`請求。
 - **`POST`的資料是附在請求本體（`Body`）而不是在`URI`，不會受到網址列長度限制，因而 POST 在過去常被用來發送檔案等大量資訊**
 
 ### 書籤設置考量 
-由於瀏覽器書籤功能是針對網址列，因此想讓使用者可以針對查詢結果設定書籤的話，可以使用 `GET`  
-`POST`後新增的資源不一定會有個`URI`作為識別，基本上無法讓使用者設定書籤。
+**由於瀏覽器書籤功能是針對網址列**，因此想讓使用者可以針對查詢結果設定書籤的話，可以使用 `GET`, `POST`後新增的資源不一定會有個`URI`作為識別，基本上無法讓使用者設定書籤。
 
-### 瀏覽器快取（Cache）
+### 瀏覽器快取（Cache）  
+只要符合 `HTTP/1.1`對Cache的要求，`GET`的回應是可以被**快取**的，最基本的就是指定的`URI`沒有變化時，許多瀏覽器會從快取中取得資料，不過，Server可以指定適當的Cache-Control Header來避免`GET` METHOD response 被快取的問題   
 
-只要符合 `HTTP/1.1` (第 13 節)對Cache的要求，`GET`的回應是可以被快取的，最基本的就是指定的`URI`沒有變化時，許多瀏覽器會從快取中取得資料，不過，Server可以指定適當的Cache-Control Header來避免`GET`回應被快取的問題。
-至於`POST`的Response，許多瀏覽器（但不是全部）並不會快取，不過`HTTP/1.1`中規範，如果伺服端指定適當的 Cache-Control 或 Expires Header，仍可以對`POST`的回應進行快取。
+至於`POST` METHOD Response，許多瀏覽器（但不是全部）並不會快取，不過`HTTP/1.1`中規範，如果伺服端指定適當的 Cache-Control 或 Expires Header，仍可以對`POST`的回應進行快取。
+
+[HTTP CACHE](https://blog.techbridge.cc/2017/06/17/cache-introduction/)
 
 ### 安全與等冪區分
 由於傳統上發送敏感資訊時，並不會透過`GET`，因而會有人誤解為`GET`不安全，這其實是個誤會，或者說對安全的定義不同，就 HTTP 而言，在` HTTP/1.1` 第 9 節對 HTTP 方法的定義中，有區分了安全方法（Safe methods）與等冪方法（Idempotent methods） 
@@ -81,7 +85,7 @@ Safe methods是指在實作應用程式時，使用者採取的動作必須避�
 
 ### REST Api
 
-現在不少 Web 服務或框架支援 REST 風格的架構，REST 全名 REpresentational State Transfer，REST 架構由客戶端／伺服端組成，兩者間通訊機制是無狀態的（Stateless），在許多概念上，與 HTTP 規範不謀而合（REST 架構基於 HTTP 1.0，與 HTTP1.1 平行發展，但不限於HTTP）。
+現在不少 Web 服務或框架支援 REST 風格的架構，REST 全名 REpresentational State Transfer，REST 架構由客戶端／伺服端組成，兩者間通訊機制是無狀態的（Stateless），在許多概念上，與 HTTP 規範不謀而合（REST 架構基於 `HTTP 1.0`，與 `HTTP1.1` 平行發展，但不限於HTTP）。
 - 符合 REST 架構原則的系統稱其為 RESTful，
 - 然而注意到以上的描述，並不是說`PUT`只能用於更新資源，也沒有說要新增資源只能用`POST`, 在等冪性時談過,`PUT`在指定的`URI`下不存在資源時，也會新建請求中附上的資源。等冪性是在選用`POST`或 `PUT`時考量的要素之一  
 - 另一個重要的考量要性，在 `HTTP/1.1` 中也有規範，也就是請求時指定的`URI`之作用
