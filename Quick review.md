@@ -51,10 +51,10 @@ access-specifier storage returnType function(parameters)
 
 1. Do not declare more than one `public` class in same file
 2. `pubic` class name should be the same as file name e.g. `name.java` , `public class name` 
-3. **non-public class only can be accessed by same package's classes**.
-  > `public` class A: Any Classes can inherit from it and uses it 
-  > `private` class A: Members(Fields and Methods) can only be accessed by method **in the same class**, cant not be the base class 
-  > `protected` class A: **Members only can be accessed by **same package**'s classes, and other classes from other packages can inherit from it, but can't access the protected members in class A**
+3. **non-public class only can be accessed by same package's classes**.  
+- `public` class A: Any Classes can inherit from it and uses it 
+- `private` class A: Members(Fields and Methods) can only be accessed by method **in the same class**, cant not be the base class 
+- `protected` class A: **Members only can be accessed by **same package**'s classes, and other classes from other packages can inherit from it, but can't access the protected members in class A**
 4. No access-specifier : Only classes  in same package can inherit from it
 
 
@@ -574,4 +574,9 @@ class A implements interfacebase1, interfacebase2{
 }
 ```
 
-
+- Abstract classes can have constants, members, method stubs (methods without a body) and defined methods, whereas interfaces can only have constants and methods stubs.
+- Methods and members of an abstract class can be defined with any visibility, whereas** all methods of an interface must be defined as public (they are defined public by default)**.
+- When inheriting an abstract class, a concrete child class must define the abstract methods, whereas **an abstract class can extend another abstract class and abstract methods from the parent class don't have to be defined.**
+- Similarly, **an interface extending another interface is not responsible for implementing methods from the parent interface.** This is because interfaces cannot define any implementation.
+- **A child class can only extend a single class (abstract or concrete)**, whereas **an interface can extend or a class can implement multiple other interfaces**.
+- **A child class can define abstract methods with the same or less restrictive visibility**, whereas a class implementing an interface must define the methods with the exact same visibility (public).
