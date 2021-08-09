@@ -227,7 +227,7 @@ There are three methods to initialize optional object
 ```java
 /**
  * <p> 
- * Creating a {@code Opetion<String> null} elements 
+ * Creating a {@code Option<String> null} elements 
  * </p>
  */
 Optional<String> empty = Optional.empty();
@@ -283,7 +283,7 @@ Optional<String> opt = Optinal.ofNullable(object);
 if(opt.isEmpty()) System.out.println("true");
 ```
 
-### Opetional With lambda 
+### Optional With lambda 
 
 ```java
 Optional<String> optOrNull = Optional.ofNullable("WhatsUp");
@@ -297,28 +297,29 @@ if (optOrNull.isPresent()) {
 
 /**
   * <p> With lambda </p>
-  * varaible {@code str} will be {@code String} type
+  * Varaible {@code str} will be {@code String} type
   * depending on {@code Optional<String> optOrNull}'s type
   */
 optOrNull.isPresent(str - > System.out.println(str.length()));
 ```
 
-Since Java 9
+> Since Java 9
+
 Using `.ifPresentOrElse(object parameter -> if_expression , else_expression )` instead
 ```java
-/**
-  * we can also handle the `Else` 
-  */
 optOrNull.ifPresentOrElse(
  (str) ->  {System.out.println(str.length();}, 
  ()    ->  {System.out.println("empty");    });
 ```
 
-## default value
-A default `optional` instance's value
+## default value (for if not situattion)
+A default `optional` instance's value via `orElse` and `orElseGet` method
 
-`.orElse` and `.orElseGet(param -> method)` method
 ```java
+/**
+  * {@code orElse} and 
+  * {@code orElseGet(param -> method)} 
+  */
 String name = null;
 String opt = Optional.ofNullable(name).orElse("Im_default_value")
 /**
@@ -326,10 +327,11 @@ String opt = Optional.ofNullable(name).orElse("Im_default_value")
   */
 System.out.println(opt);    
 String opt_2 = Optional.ofNullable(name).orElseGet(()->"Im_default_value" );
-```
 
-With Function/Method
-```java
+
+/**
+  * With Lambda 
+  */
 public class OrElseOptionalDemo{ 
    //...
   public static String getDefaultValue(){
@@ -350,8 +352,8 @@ String name3 = Optional.ofNullable(name).orElseGet(OrElseOptionalDemo::getDefaul
 
 ### Different btw `.orELse` and `.orElseGet`
 ```java
-String name = "Im_not_Null";
 
+String name = "Im_not_Null";
 /**
   * {@code orElse(Method())} 
   */
