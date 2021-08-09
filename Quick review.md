@@ -2,7 +2,6 @@
 # Java Quick Review
 
 ## Modifier 
-
 ```java
 /**
   * declaration
@@ -15,59 +14,66 @@ access-specifier storage returnType function(parameters)
 3. private
 4. default (No modifier)
 
-### Storage
+access-specifier for class 
+- CLASS可见表示其它类可以用这个类创建实例对象
+
+access-specifier for member
+- MEMBER可见表示其它类可以用这个类的实例对象访问到该成员；
+
+### storage
 1. static 
 2. final
 3. abstract
+- a `static` member can be shared by all objects of classA and objects which inherit from classA
 
-## Access Control of a class
+## Access Control for the Class
 1. public    : Accessed By Any classes
 2. default   : Accessed By the Classes Within the same package 
-3. protected : Accessed By the classes and the Sub-classes IN THE SAME PACAKAGE  
+3. protected : **Accessed By the classes and the sub-classes IN THE SAME PACAKAGE** (e.g. `clone()`)
 4. private   : Accessed only By members(fields and method) in same class
 
-## Access Specifier Within pakacge
-| Access Specifier              |  Accessible to a subclass inside A same package | Accessible to all other classes in the same package |
-| ----                          |     ---                                         |     ----                                            |
+### Visibility Within pakacge
+
+| Access Specifier              |  Accessible to a SUBCLASS inside A same package | Accessible to all OTHER CLASSES in the same package |
+| ---                           |     ---                                         |     ---                                             |
 |  default(no modifier)         |     Yes                                         |     Yes                                             |
-|  public          |     Yes                                         |     Yes                                             |
-|  protected       |     Yes                                         |     Yes                                             |
-|  private         |     No                                          |     No                                              | 
+|  public                       |     Yes                                         |     Yes                                             |
+|  protected                    |     Yes                                         |     Yes                                             |
+|  private                      |     No                                          |     No                                              | 
 
--  using `default` access specifier when classes and main inside the same package  
-
-
-## Outside the class's package
-| Access Specifier      |  Accessible to a subclass outside the same package | Accessible to all other classes outside the same package |
-| ----                  |     ---                                         |     ----                                            |
-|  default(no modifier) |     No                                          |     No                                             |
-|  public               |     Yes                                         |     Yes                                             |
-|  protected            |     Yes                                         |     No                                              |
-|  private              |     No                                          |     No                                              | 
+- Use `default` when classes and `public void main()` inside the same package  
 
 
-- The derived can not access base's  private member but it can be accessed via public method or protected method of base class
-- a `static` member can be shared by all class A's obj and obj who inherit from A
+### Visibility Outside the class's package
 
-1. Do not declare more than one `public` class in same file
-2. `pubic` class name should be the same as file name e.g. `name.java` , `public class name` 
+| Access Specifier      |  Accessible to a SUBCLASS outside the same package | Accessible to all OTHER CLASSES outside the same package |
+| ----                  |     ---                                            |     ----                                                 |
+|  default(no modifier) |     No                                             |     No                                                   |
+|  public               |     Yes                                            |     Yes                                                  |
+|  protected            |     Yes                                            |     No                                                   |
+|  private              |     No                                             |     No                                                   | 
+
+- **The derived can not access base's private member but it can be accessed via public method or protected method of base class**
+- **`protected`通常都用來修飾MEMBERS(e.g. methods)，表示`protected members`在繼承時對於其Subclass是可見的，但是這個訪問修飾符對於Class沒什麼意義。**
+
+### Access Specifier for a Class 
+1. Do not declare more than one `public` class in same file   
+2. `pubic` class name should be the same as file name. e.g. filename : `X.java` => class name : `public class X`  
 3. **non-public class only can be accessed by same package's classes**.  
-- `public` class A: Any Classes can inherit from it and uses it 
-- `private` class A: Members(Fields and Methods) can only be accessed by method **in the same class**, cant not be the base class 
-- `protected` class A: **Members only can be accessed by **same package**'s classes, and other classes from other packages can inherit from it, but can't access the protected members in class A**
-4. No access-specifier : Only classes  in same package can inherit from it
+   > `public` class A: Any Classes can inherit from it and uses it(and its methods)   
+   > `private` class A: Members in class A can only be accessed by method **in the same class**, cant not be the base class   
+   > `protected` class A: Members in class A only can be accessed by same package's classes, and other classes from other packages can inherit from it, but can't access the protected members in class A    
+4. No access-specifier : Only classes in same package can inherit from it
 
-
-#### Protected Member in the Base Class
+### Protected Member in the Base Class
 
 Protected members in a class may ony be accessed by methods in a subclass and the methods in the same package.
 ```java
 public class GradedActivity2
 {
     /**
-      * <p> protected member 
-      *     {@code score}  can be 
-      *     accessed by subclass  </p>
+      * <p> protected member {@code score}  
+      *     can be accessed by subclass  </p>
       */
     protected double score; 
     
@@ -90,16 +96,33 @@ public class Exam extends GradeActivity2
 }
 ```
 
-### Is-A Relationship Does Not Work In Reverse
+## [Inheritance](https://github.com/CyC2018/CS-Notes/blob/master/notes/Java%20%E5%9F%BA%E7%A1%80.md#%E5%85%AD%E7%BB%A7%E6%89%BF) 
 
+一個良好的OOP/OOD會隱藏所有實現(implementations)細節,把它的 API 與它的implementation清晰地隔離開  
+- 模組之间只透過它们的 API 溝通，一個模組不需要知道其他模組的内部工作情況，我們把概念稱作訊息隱藏或封装
+  > 因此Access-Control應盡可能地使每個Class或者Member不被外界訪問
+
+
+### `Is-A` Relationship Does Not Work In Reverse
+**如果sub的方法Override了Base的方法，則sub中該方法的訪問級別不允许低于base的訪問級別**  
+為了確保可以使用base實例的地方都可以使用sub實例去代替，也就是满足里氏替换原则  
 ```java
-// GradeActivity
-//     '--extends---->FinalExam
-    
+/**
+  *  Big ------------------------- Small
+  * GradeActivity--> extends --> FinalExam
+  */
 GradedActivity activity = new GradedActivity();
+
+/** 
+  * <p> CASE 1 </p>
+  * SMALL <---- BIG 
+  **/
 FinalExam exam = activity;    // ERROR!
 
-// The Compiler Works but run-time fials
+/**
+  * <p> CASE 2 </p>
+  * The Compiler Works BUT run-time fials
+  */
 GradedActivity activity = new GradedActivity();
 FinalExam exam = (FinalExam) activity;    // ERROR!
 ```
@@ -139,7 +162,7 @@ Always Call static member with `.`
 ClassName.staticMember;
 ```
 
-static member As global variable
+Static member As global variable
 ```java
 /** 
  * {@code count} would never reset, and shared by account's objs
@@ -216,23 +239,23 @@ class increment
 ```
 
 ## Package 
-- es ist wie `.h` in Cpp
+Es ist wie `.h` in Cpp
+
 Creat a package in bash
 ```console
 javac -d . filename.java
 ```
-
-name of package
-```
-LARGE-----------SMALL
+Name of package
+```java
+//LARGE-----------SMALL
 tw.network.nkust.csie;
 ```
-
-import the package
-```bash
-import java.util.*;
+Import the package
+```java
+import tw.network.nkust.csie;
+iport java.util.*
 ```
-> `*` all public class in java.util can be used..
+- `*` all public classes in java.util can be used..
 
 ### namespace of JAVA
 To avoid name conflit in different files
@@ -244,12 +267,6 @@ public class Increment
   //.....
 }
 ```
-
-to create package via bash command
-```bash
-javac -d . Increment.java
-```
-
 ```java
 /**
   * <p> import to test.java </p>
@@ -260,17 +277,17 @@ pubic class test{
 }
 ```
 
-Compiler use **class loader** to find the package and it search the package first from
+Compiler uses **class loader** to find the package and it search the package first from
 1. search from JDK's standard liberary  , if not
 2. search optional package , if not
 3. search from classspath (package list)
 
 ## Dynamic Binding 
-
 When a superclass variable references a subclass object, a potential problem exists. 
+- If the subclass has overridden a method in the superclass, and an instance makes a call to that method?
+  > Which Method it will call ? Method from superclass or subclass ?
 
-- What if the subclass has overridden a method in the superclass, and the variable makes a call to that method?
-    > Does the variable call the superclass’s version of the method, or the subclass’s version?
+Unlike Static Binding (it calls functions at the compiler time) dynamic Binding at comipler time only checks the type of object if it can be called or not
 
 ```java
 class Employee{
@@ -279,44 +296,38 @@ class Employee{
     Employee EmployeeA = new Employee();
     Employee EngineerB = new Engineer();
     EmployeeA.getSalary(); 
-    // getSalary() in Class Engineer or in Class Employee?
-    // Dynamic Binding would check that for us 
+    /**
+      * getSalary() in Class Engineer or in Class Employee?
+      * Dynamic Binding would check that for us 
+      */
     EngineerB.getSalary();
   }
 }
 ```
 
-#### Static binding 
-(In c prog) Call function at compiler-time
-
-#### Dynamic binding
-(In Java prog) Depend on reference type at run-time
-At comipler time it would only check the type of object if it can be called or not
-
-So at Compiler Time
 ```java
 class Employee{
   public static void main()
   {
     Employee e = new Manager();
     e.getSalary();
-    e.doAccounting(); // Compiler Error
+    e.doAccounting(); // Compiler Error (e doesn't have doAccounting methods)
   }
 }
 ```
-At Comiple-Time Checks ONLY
-1. Class `Employee` exists
-2. `Manager` is an `Employee`;
-3. `Employee e` has `getSalary()` method
-4. ERROR `Employee e` doesn't have `doAccounting()` method
 
-At Run-Time (Check Overriden Function and Reference to the object)
-1. `e` is(references to) an `Manager` class;
+#### At Comiple-Time
+- [x] 1. Check if `Employee` exists 
+- [x] 2. Check if `Manager` is subclass of `Employee`
+- [x] 3. Check if `Employee e` has `getSalary()` method
+- [x] 4. Check if `Employee e` has `doAccounting()` method
+
+#### At Run-Time (Check Overriden Function and References)
+1. `Employee e` references to an `Manager` class;
 2. (Check the Overriden Function) `Manager` class has its own `getSalary()` method
    > Invoke Manager's `getSalary()` method
 
 ## Abstract Classes and Abstract Methods
-
 
 ### Polymorphism
 ```java
@@ -361,6 +372,18 @@ When a Class Contains an abstract method, you cannot create an instance of the c
 ```
 
 
+# Interface 
+
+-Interface是Abstraction的延伸，在 Java 8 之前，它可以看成是一個完全抽象的類，也就是說它不能有任何的方法實現。
+
+- 從 Java 8 開始, Interface也可以擁有默認(Default)方法實現，這是因為不支持默認方法的Interface的維護成本太高了。
+  > 在 Java 8 之前，如果一個Interface想要添加新的方法，那麼要修改所有實現了該接口的類，讓它們都實現新增的方法。
+
+- Member of Interface : 
+  > `public` by default，並且不允許定義為`private` 或者`protected`的Member
+  >> **從 Java 9 開始，允許將方法定義為 private，這樣就能定義某些復用的代碼又不會把方法暴露出去。**
+  > fields' keyword `static` and `final` By default
+
 ## Implementing Multiple Interface
 
 ```java
@@ -369,16 +392,21 @@ public class ACLASS implements INTERFACE1,
                                INTERFACE3
 ```
 
+For example
 ```java
 /**
-  * Despoit implements Exchange and BackAccount
-  * (I)Exchange              BackAccount(I)
-  *  '---------> Deposit <-------'
+  * Deposit implements Exchange and BackAccount
+  *                +-->(I)Exchange            
+  *      Deposit---|     
+  *                +-->(I)BackAccount
   */
 interface BankAccount
 {
-      //fields in interface are {@code final} type 
-      double savRate = 2.2.5;
+      /**
+        * Fields in interface 
+        * are {@code final} type 
+        */
+      double saveRate = 2.2.5;
       abstract void getInterest();
 }
 
@@ -409,6 +437,30 @@ class Deposit implements BankAccount, Exchange{
     }
 }
 ```
+
+## COMPARISON
+
+`Absract`提供了一种 IS-A 关系，需要满足里式替换原则，即子类对象必须能够替换掉所有父类对象。
+
+而接口更像是一种 LIKE-A 关系，它只是提供一种方法实现契约，并不要求接口和实现接口的类具有 IS-A 关系。
+从使用上来看，一个Class可以实现多个`Interface`s，但是不能继承多`Abstract`s。
+`Interface`的Keyword只能是`static`和`final`类型的，而`Abstract`的Keyword没有这种限制。
+`Interface`的Member只能是`public`的，而`Abstract`的Member可以有多种Access Controls。
+
+
+## Who to Use
+
+Interface
+- 需要讓UNRELATED的CLASS都實現一個方法，例如不相關的類都可以實現 Comparable 接口中的 compareTo() 方法；
+- 需要使用多重繼承。
+
+Abstract 
+- RELATED : 需要被SHARED在幾個RELATED的CLASSES 
+- ACCESS CONTROL : 需要能控制繼承來的成員的ACCESS CONTROL，而不是都為`public`
+- NON-STATIC AND NON-FINAL : 需要繼承非STATIC和非FINAL FIELDS
+
+> IN MANY CASES，INTERFACE優先於ABSTRACT。因為INTERFACE沒有ABSTRACT嚴格的CLASS層次結構要求，可以靈活地為一個CLASS添加BEHAIOUR。
+> Since Java 8，Interface也可以有默認的方法實現，使得修改INTERFACE的COST也變的很低    
 
 ## Interface and Inheritance Together 
 
