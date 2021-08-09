@@ -87,20 +87,21 @@ List <T> arraylist  =  new ArrayList<> ();
 List <T> linkelist  =  new LinkedList<> ();
 List <T> vector     =  new Vector<> ();
 ```
-## ArrayList
+## ArrayList(Dynamic arrays)
 `ArrayList` provides us with dynamic arrays in Java.
-> It can not be used for primitive types, 
+1. It can not be used for primitive types, 
+2. To Increase Capacity we need to call `Arrays.copyOf()` (copy older Array to a new one) which makes lot of costs
+3. `remove()` also costs
 
-## Vector
-A vector provides us with dynamic arrays in Java
-> This is identical to ArrayList in terms of implementation. 
-
-- However, the primary **difference between a vector and an ArrayList is that a Vector is synchronized and an ArrayList is non-synchronized**.
+## Vector(Dynamic arrays)
+- It is identical to ArrayList in terms of implementation. 
+- The primary **difference between a vector and an ArrayList is that a Vector is synchronized and an ArrayList is non-synchronized**.
 
 ### PLUGS
-**ArrayList中的資料是以連續**的方式儲存在記憶體，可支援隨機存取及循序存取，**所以循序讀取或排序(sort)時的效能好**。每個節點不用另外儲存下一個節點的指標，也因此，每個節點所占用的記憶體較少，但也**因為是線性儲存於記憶體，所以在如果要對之中的元素進行插入或刪除節點等動作時效能較差**，因為我們必須移動大量節點(當刪掉/新增一個元素，其他元素的位置都會被迫改變)。
+- **ArrayList中的資料是以連續**的方式儲存在記憶體，可支援隨機存取及循序存取，**所以循序讀取或排序(sort)時的效能好**。
+  > 每個節點不用另外儲存下一個節點的指標，也因此，每個節點所占用的記憶體較少，但也**因為是線性儲存於記憶體，所以在如果要對之中的元素進行插入或刪除節點等動作時效能較差**，因為我們必須移動大量節點(當刪掉/新增一個元素，其他元素的位置都會被迫改變)。
 
-**LinkedList中的資料以不連續**的方式儲存，因此不需使用連續的記憶體空間，每個節點都會記錄著下個節點的指標，所以**在串列中插入或刪除節點時只需修改相關節點的指標，所以插入或刪除特定元素時的效能較好**。但它的缺點是**因非線性儲存，所以我們在讀取時無法快速索引到該節點(因為不知道位置)，只能以循序存取讀取每一個節點的指標**，所以讀取的效能較差。另外，**因為每個元素還要儲存下一個元素的指標，因此占記憶體容量比較大。**
+- **LinkedList中的資料以不連續**的方式儲存，因此不需使用連續的記憶體空間，每個節點都會記錄著下個節點的指標，所以**在串列中插入或刪除節點時只需修改相關節點的指標，所以插入或刪除特定元素時的效能較好**。但它的缺點是**因非線性儲存，所以我們在讀取時無法快速索引到該節點(因為不知道位置)，只能以循序存取讀取每一個節點的指標**，所以讀取的效能較差。另外，**因為每個元素還要儲存下一個元素的指標，因此占記憶體容量比較大。**
 
 # Map Interface 
 [HashMap](https://techmastertutorial.in/java-collection-internal-hashmap.html)  
@@ -108,9 +109,21 @@ A vector provides us with dynamic arrays in Java
 [Calcuate hascode and index of bucket](https://www.geeksforgeeks.org/internal-working-of-hashmap-java/)  
 
 ## HashMap
-- HashMap stores the key-value pairs using a hash table.  
-- Entry : The Set of key-value pairs
+- HashMap stores the entries(key-value pairs) using a hash table.  
+  > Entry : The Set of key-value pairs
 - In the hash table each key-value pair is mapped corresponding to the hashcode derived from the key.  
+- HashMap's key can be  `null` 
+  > HashMap insert `null` key-value pair only at the index 0 (bucket) 
+- Insert New entry at the head of the List of the bucket not at the tail.
+- A bucket(index of bucket) : `int i = indexFor(hash, table.length);` 
+- [Capacity Expansion](https://github.com/CyC2018/CS-Notes/blob/master/notes/Java%20%E5%AE%B9%E5%99%A8.md#5-%E6%89%A9%E5%AE%B9-%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86)
+- Since JDK 1.8，if number of entries in a bucket > 8 then convert the linked-lists to black red tree.
+- HashMap's internal hash table is is created only after the first use.   
+  > Initially the hash table is `null`.    
+  > Table is initialized only when the first insertion call is made for the HashMap instance.    
+  > ```java
+  > transient Node<K,V>[] table;
+  > ```
 
 
 ![image](https://user-images.githubusercontent.com/68631186/125174975-b71b6980-e1fb-11eb-8803-54ca5fe54bb9.png)
@@ -120,24 +133,16 @@ A vector provides us with dynamic arrays in Java
     > Each array index ( or we can say each bucket ) contains a reference to a linked list in which we store the key-value pair entry.
 
 ![image](https://user-images.githubusercontent.com/68631186/125176665-dfa96080-e207-11eb-8b2e-15088e3b721e.png)  
-- For a key-value pair, first identify the hash code for the key using the `hashcode` method.  (`index = hashCode(key) & (n-1).`)
+- For a key-value pair, first identify the hashode for the key using the `hashcode` method.  (`index = hashCode(key) & (n-1).`)
     > Once we have the hash code, index (of the array) is calculated to identify the bucket in which the key-value pair will be stored.  
     >>  Once we have the bucket index (of the array) , check for the entry (linked) list.
-- For entry list  , if
-    1. we do not have the already existing list corresponding to that (bucket) index then we create a list and add the key-value pair entry to this list. 
-    2. already there is a list of the key-value entries then we go through(search) the list check for key object 
-- For Key , if
-    1. the key already exist then we override the value.    
-    2. **the key is not there then a new entry is created** for the key-value pair. 
-        > New entry is then added to the list
-
-
-HashMap's internal hash table is is created only after the first use.   
-- Initially the hash table is null.   
-- Table is initialized only when the first insertion call is made for the HashMap instance.  
-```java
-transient Node<K,V>[] table;
-```
+- Check For entry(list), IF
+    1. we do not have the already existing (linked)list corresponding to that (bucket) index then we create a (linked)list and add the key-value pair entry to this (linked)list. 
+    2. there is already a (linked)list of the key-value entries then we go through(search) the list check for key object 
+- Check For Key , IF
+    1. the key already exist then we override(update) the value.    
+    2. **the key is not there then a new entry(key-value pair) is created**
+        > New entry is then added to head of the (linked)list
 
 ### capacity and load factor 
 **The two parameters that affect the performance of HashMap are – initial capacity and load factor.**   
@@ -163,8 +168,24 @@ public HashMap(int initialCapacity, float loadFactor) {
    }  
 ```
 
+## [ConcurrentHashMap](https://github.com/CyC2018/CS-Notes/blob/master/notes/Java%20%E5%AE%B9%E5%99%A8.md#concurrenthashmap)
+
+```java
+static final class HashEntry<K,V> {
+    final int hash;
+    final K key;
+    volatile V value;
+    volatile HashEntry<K,V> next;
+}
+```
+
+## [Linked Hash Map](https://github.com/CyC2018/CS-Notes/blob/master/notes/Java%20%E5%AE%B9%E5%99%A8.md#linkedhashmap)
+```java 
+public class LinkedHashMap<K,V> extends HashMap<K,V> implements Map<K,V>
+```
+
 # Set Interface 
-A set is an unordered collection of objects in which **duplicate values cannot be stored**.
+- **A set is an unordered collection of objects** in which **duplicate values cannot be stored**.
 
 This `Set` interface is implemented by various classes like `HashSet`, `TreeSet`, `LinkedHashSet`
 ```java
@@ -172,19 +193,25 @@ Set<T> hs = new HashSet<> ();
 Set<T> lhs = new LinkedHashSet<> ();
 Set<T> ts = new TreeSet<> ();
 ```
+
+TreeSet：基于红黑树实现，支持有序性操作，例如根据一个范围查找元素的操作。但是查找效率不如 HashSet，HashSet 查找的时间复杂度为 O(1)，TreeSet 则为 O(logN)。
+
+HashSet：基于哈希表实现，支持快速查找，但**不支持有序性操作**。并且失去了元素的插入顺序信息，也就是说使用 Iterator 遍历 HashSet 得到的结果是不确定的。
+
+LinkedHashSet：具有 HashSet 的查找效率, 且使用**doubly linked list** to store the data and **retains the ordering of the elements**
+
 ## HashSet
 **The objects that we insert into the HashSet do not guarantee to be inserted in the same order**  
 
-> HashSet uses the **unique key concept of the HasMap** and **inserts the values of the HashSet** in the underlying HashMap as keys and just put some dummy object corresponding to each key. Which makes it a O(1) insertion data structure and keeps the values unique in a HashSet.
+> HashSet uses the **unique key concept of the HashMap** and **inserts the values of the HashSet** in the underlying HashMap as keys and just put some dummy object corresponding to each key. Which makes it a O(1) insertion data structure and keeps the values unique in a HashSet.
 
-- HashSet allows null `value`.
-- HashSet class is non synchronized.
-- HashSet doesn't maintain the insertion order. Here, elements are inserted on the basis of their hashcode.
+- HashSet allows `null` value.
+- HashSet class is non `synchronized`.
+- HashSet doesn't maintain the insertion order. 
+  > Elements are inserted on the basis of their hashcode.
 - **HashSet is the best approach for search operations**.   
 ![image](https://user-images.githubusercontent.com/68631186/125178853-19d02d80-e21b-11eb-87d8-dd34361b438c.png)  
 
-## LinkedHashSet
-Use a **doubly linked list** to store the data and retains the ordering of the elements
 
 # Optional
 `Optional` gives the alternatives (e.g. if-else ... etc) to make code cleaner
@@ -196,7 +223,6 @@ There are three methods to initialize optional object
 2. `.of(object)`
 3. `.ofNullable(object)`
  
-
 `empty()` create a **null optional instance**
 ```java
 /**
