@@ -1,8 +1,17 @@
 ###### tags: `JAVA`
-# Java Quick Review
+# Java Basic
 
-## Modifier 
+[Java 基本問題](https://medium.com/%E7%A7%91%E6%8A%80%E7%A0%94%E7%A9%B6%E9%99%A2/java%E9%9D%A2%E8%A9%A6%E9%A1%8C%E6%95%B4%E7%90%86-ed44d4b10437)  
+[OOD Principle](https://github.com/maxwolf621/DesignPattern/blob/main/_Principle.md)
 
+
+## [String](https://github.com/CyC2018/CS-Notes/blob/456ff183d550baba9f1f5f54a3f736a5089f1cb2/notes/Java%20%E5%9F%BA%E7%A1%80.md#%E4%BA%8Cstring)  
+
+* Why String is `final`
+* String, StringBuffer and StringBuilder and `synchronized` and thread safe
+* String Pool, `new String("abc")` and `String s = "abc"`
+
+## Modifier For Java 
 ```java
 /**
   * declaration
@@ -15,7 +24,7 @@ access-specifier storage returnType function(parameters)
 3. private
 4. default (No modifier)
 
-access-specifier for member
+#### access-specifier for Class' Member
 - 表示某Class's member的可見度
   > 例如: Other Classes可以用這個Class的Instance access到該member
 
@@ -41,7 +50,6 @@ Visibility Within pakacge
 - **The derived can not access base's private member but it can be accessed via public method/protected method from base class**
 - **`protected`通常都用來修飾MEMBERS(e.g. methods)，表示`protected members`在繼承時對於其Subclass是可見的，但是這個訪問修飾符對於Class沒什麼意義。**
 
-### Access Specifier for a Class 
 1. Do not declare more than one `public` class in same file   
 2. `pubic` class name should be the same as file name. e.g. filename : `X.java` => class name : `public class X`  
 3. **non-public class only can be accessed by same package's classes**.  
@@ -51,7 +59,6 @@ Visibility Within pakacge
    >  `default` class A : Only classes in same package can inherit from it => Accessed By the Classes Within the same package
 
 # OOP
-
 [class and object](https://medium.com/@nwyyy/design-pattern%E5%88%9D%E5%BF%83%E8%80%85%E7%AD%86%E8%A8%98-1-95774a905010)   
 
 Object-oriented programming (OOP) is a programming paradigm based on the concept of objects, which can contain data and code: data in the form of fields (often known as attributes or properties), and code, in the form of procedures (often known as methods).
@@ -126,8 +133,9 @@ Therefore, **inheritance allows code reusability.**
 > 例如我們利用instance提供的method(e.g setter/getter)來訪問某模組內的某個功能  
 
 ## [Inheritance](https://github.com/CyC2018/CS-Notes/blob/master/notes/Java%20%E5%9F%BA%E7%A1%80.md#%E5%85%AD%E7%BB%A7%E6%89%BF)  
-**當sub class的方法Override了Base class，則sub中該方法的access control不能低於base的**, 原因是為了確保可以使用base實例的地方都可以使用sub實例去代替，也就是符合Liskov Substitution Principal    
-
+**當sub class的方法Override了Base class，則sub中該方法的access control不能低於base的**, 原因是為了確保可以使用base實例的地方都可以使用sub實例去代替，也就是符合Liskov Substitution Principle
+- [Details For Liskov Substitution](https://www.jyt0532.com/2020/03/22/lsp/)  
+- [Behaviour and LSP](https://medium.com/@f40507777/%E9%87%8C%E6%B0%8F%E6%9B%BF%E6%8F%9B%E5%8E%9F%E5%89%87-liskov-substitution-principle-adc1650ada53)  
 ### `Is-A` Relationship Does Not Work In Reverse
 
 ```java
@@ -324,6 +332,45 @@ pubic class test{
 - Member in the Interface : 
   > `public` by default，不允許定義為`private` 或者`protected`的成員Members. **Since Java 9，允許將方法定義為`private`，這樣就能定義某些復用的程式又不會把方法暴露出去[Example GeekForGeek](https://www.geeksforgeeks.org/private-methods-java-9-interfaces/)**     
   > Keyword `static` and `final` for fields by default    
+
+
+### Java 9's interface
+
+[Use Private Method](https://www.codewithjason.com/purpose-private-methods-use/#:~:text=Private%20methods%20are%20useful%20for,called%20outside%20of%20that%20class.)
+
+[Why use Private Method IN OOP](https://stackoverflow.com/questions/2620699/why-private-methods-in-the-object-oriented#:~:text=Private%20methods%20are%20useful%20for,called%20outside%20of%20that%20class.)
+
+Private methods can be implemented static or non-static.  
+> This means that in an interface we are able to create private methods to encapsulate code from both `default` and `static` public method signatures.
+
+`private` is what won't be **reimplemented and accessed** by future programmers using your code.  
+But private also means things done on the side, so the user don't see it(encapsulation).   
+That's why we call the public methods a public interface - it's all the user will see from the outside.   
+
+```
+Constant variables
+Abstract methods
+- Default methods (JAVA 8)
+Static methods
++ Private methods
++ Private Static methods
+```
+These private methods will improve code re-usability inside interfaces and will provide choice to expose only our intended methods implementations to users.   
+**THEY are only accessible within that interface only and cannot be accessed or inherited from an interface to another interface or class.**
+
+- Private method in `interface` cannot be `abstract` and no `private` + `abstract` modifiers together.
+- Private method can be used(called) only inside `interface` and other `static` and non-static methods in the `interface`.
+- Private non-static methods cannot be used inside private static methods. (Same as `static` usage)
+> We should use `private` modifier to define these methods and no lesser accessibility than private modifier.
+
+### Benefits of Private Methods in Interfaces (使界面更有OOP精神=>封裝)
+
+`interface`s are able to use private methods to hide details on implementation from classes that implement the interface. 
+> As a result, one of the main benefits of having these in `interface`s is **encapsulation**.
+
+Another benefit is (as with private methods in general) that there is less duplication and more re-usable code added to interfaces for methods with similar functionality.
+
+
 
 ## Interface Vs Abstract Class 
 [More Details](https://stackoverflow.com/questions/1913098/what-is-the-difference-between-an-interface-and-abstract-class)   
@@ -624,6 +671,7 @@ public static void main(String[] args) {
 ## Overload
 
 指在某Class內存在多個相同的Method名稱，但是在該Method的Parameter上數量,類型或順序At Least有一個不同  
+
 - 返回類型不同，其它都相同不能稱作Overload
 ```java
 class OverloadingExample {
@@ -646,7 +694,163 @@ public static void main(String[] args) {
 ## [Java Reaction](https://github.com/CyC2018/CS-Notes/blob/456ff183d550baba9f1f5f54a3f736a5089f1cb2/notes/Java%20%E5%9F%BA%E7%A1%80.md#%E4%B8%83%E5%8F%8D%E5%B0%84)
 
 ## Throwable
-[Question](https://www.journaldev.com/2167/java-exception-interview-questions-and-answers)
+[Interview Question](https://www.journaldev.com/2167/java-exception-interview-questions-and-answers)
+
+![image](https://user-images.githubusercontent.com/68631186/128909452-5ebbd566-1aa4-4f7e-b396-d65f64dede5a.png)
+- Error(uncheck exception)   : 不希望被Program CATCHED 或者是Program (unable to handle)無法處理的錯誤
+- Exception(check exception) : 表示Program可能catch的異常情況(exception)或者說是Program可以處理(able to handle)的Exception
+  > 其中Exception又分為`RuntimeException`和`IOException`異常。
+
+Error和Exception的區別
+- Error通常是災難性的致命的錯誤，是Program無法控制和處理的(unable to handle)，當出現這些異常時，JVM一般會選擇終止thread
+- Exception通常情況下是可以被Program處理的(able to handle)，並且可在Program中應該盡(`try ... catch ...`)可能的去處理這些異常
+  > 也就是說check exception是可以被預防handle的,透過`throws` exception 或者 `try ... catch ... finally`
+
+Compiler
+- Uncheck exception : Compiler不要求強制處理的異常  
+- Check exception   : Compiler要求必須處置的異常  
+
+## `throw new`
+
+```java
+if( exception condition){
+ throw new exception_ ;
+}
+```
+
+當其Program情況符合異常情形(exception condition)
+- 則指阻止當前Method或Scope繼續執行。其次把異常情形和普通問題相區分，普通問題是指在當前環境下能得到足夠的信息，總能處理這個錯誤。對於Exception Condition，已經無法繼續下去了，因為在當前環境下無法獲得必要的信息來解決問題，開發者所能做的就是從當前環境中跳出(throw)，並return當前exception之問題給上一層環境，這就是拋出異常時所發生的事情。
+
+拋出異常後, 創建普通的java對象一樣將使用new在堆上創建一個異常對象；然後，當前的執行路徑（已經無法繼續下去了）被終止，並且從當前環境中彈出對異常對象的引用。此時，異常處理機制接管程序，並開始尋找一個恰當的地方繼續執行程序，這個恰當的地方就是異常處理程序或者異常處理器，它的任務是將程序從錯誤狀態中恢覆，以使程序要麽換一種方式運行，要麽繼續運行下去。
+
+## try ... catch 
+
+在方法拋出異常之後, Runtime系統將轉為尋找合適的異常處理器（exception handler）
+Exception Handler是異常發生時依序呼叫堆疊在Stack內方法的集合。當異常處理器所能處理的異常類型與方法拋出的異常類型相符時，即為合適的Exception Handler  
+> Runtime系統從發生異常的方法開始，批次回查調呼叫Stack中的方法，直至找到有合適的Exception Handler(方法)並執行  
+> 當Runtime系統未能在Stack找到能對應Exception的Exception Handler的方法時，則Runtime系統終止(terminate)
+
+`RuntimeException`及其subs的Unchecked性質,發生這些exceptions時會由Java系統自動拋出，允許Program忽略`RuntimeException`
+
+對於方法運行中可能出現的Error，當運行方法不欲Catch時，Java允許該方法不做任何拋出聲明
+> 因為，大多數Error異常屬於永遠不能被允許發生的狀況，也屬於合理的應用程序不該Catch的異常,言下之意就是你寫的Code不合邏輯以及語法
+
+
+對於所有的Check Exception，Java規定需規定進行`try ... catch ...`或者 `thorw` 來處理這些exceptions
+例如
+```java
+public class TestException {  
+    public static void main(String[] args) {  
+        int a = 1;  
+        int b = 0;  
+        try { // -------------------listen------------------------------------ 
+            if (b == 0) throw new ArithmeticException(); //via throw         |  
+        }//<-----------------------------------------------------------------+
+        catch (ArithmeticException e) { // via try ... catch  
+            /*How you gonna handle this exception*/  
+        }  
+        // other catchs ...
+    }  
+}  
+```
+- `try`     : LISTEN可能會出現(throw)異常的程式碼, 放在`try`內，當try語句塊內發生異常時，異常就被拋出。
+- `catch`   : **FETCH the Exception的類別from `try` block, exception順序：先子類後父類(越底層exception的先)**
+- `finally` : `finally`語句塊總是會被執行, 它主要用於回收在try塊里打開的物力資源(如數據庫連接、網絡連接和磁盤文件)。當它執行完成之後，才會回來執行`try`或者`catch` block中的`return`或`throw`，如果`finally`中使用了`return`或者`throw`等終止(terminate)方法的語句，則就不會跳回執行，直接停止。
+- `throw`     : for blocks `{ .... }` that might throw exception
+- `throws`    : for methods `access-specifier returnType method(...) throws ...` that might throw exception 
+
+```java
+class TestThrow{
+    static void proc(){
+        try{
+            throw new NullPointerException("demo");    // 2
+        }catch(NullPointerException e){
+            System.out.println("Caught inside proc");  // 1
+            throw e;
+        }
+    }
+
+    public static void main(String [] args){
+        try{
+            proc();
+        }catch(NullPointerException e){
+            System.out.println("Recaught: "+e);  //3 
+        }
+    }
+}
+/** If exceptions happens
+  * <li> Caught inside proc
+  * <li> Recaught: java.lang.NullPointerException: demo
+  */
+```
+
+## `throws`
+
+- 如果是不受檢查異常（unchecked exception），即Error、RuntimeException或它們的子類，那麽可以不使用throws關鍵字來聲明要拋出的異常，編譯仍能順利通過，但在Runtime時會被系統拋出。
+- 必須聲明方法可拋出的任何檢查異常（checked exception）。即某方法可能出現checked exception,必定得用`try ... catch ...`，或者`throws`將throw exception，否則會導致Compiler Error
+- 僅當拋出了異常，該方法的呼叫者才必須處理或者重新拋出該異常。當方法的呼叫者無力處理該異常的時候，應該繼續拋出，而不是囫圇吞棗(持續丟給上層,不是放棄)
+- 呼叫方法必須follow任何checked exception的處理和聲明
+  > 若覆蓋(override)一個方法, 則不能宣告與覆蓋方法不同/不相關的Exception, 宣告的任何異常必須是被overriden method所宣告的異常之同類或子類  
+
+## `finally`
+
+當異常發生時，通常方法的執行將做一個陡峭的非線性的轉向，它甚至會過早的導致方法返回。
+> 例如，某方法打開了一個文件並關閉，然後退出，你不希望關閉文件的程式碼被異常處理機制旁路, 此時就需要`finally`處理這種情況  
+
+- `finally`創建的block在`try ... catch ...`完成之後另一個`try ... catch`出現之前執行
+- `finally`'s block無論有沒有異常拋出(exception)都會執行。如果拋出異常，即使沒有catch子句匹配，finally也會執行。一個方法將從一個`try ... catch ...`
+   > 經過一個未捕獲的異常或者是一個明確的返回語句，`finally`子句在方法返回之前仍將執行    
+   > 這在關閉文件和釋放(release)任何在方法開始時被分配的其他資源是很有用(像是因為exceptio而造成memory leak)     
+- `finally`'s block 是optional，可以有也可以無，但是每個try至少需要一個catch或者finally's block
+
+finally會在try結束之前執行
+```java
+try{
+ System.out.println("1");
+ retrun ;  // print 1 -> ptint 2 -> do return
+}
+finally{
+ System.out.println("2");
+}
+/**
+  * 1 
+  * 2
+  */
+```
+
+- 在`finally`中改變`return`的做法是不好的，因為如果`return`存在`finally` blocks，try中的`return`不會立馬返回caller，而是記錄下返回值待`finally` block執行完畢之後再做`return`,然後如果在`finally`中修改了返回值，就會返回修改後的值  
+
+
+- throws、throw、try、catch、finally分別如何使用？
+  > 在Java中，每個異常都是一個對象，它是`Throwable`類或其子類的實例  
+  > 當一個方法出現異常後便拋出一個異常對象，該對象中包含有異常訊息，呼叫該異常對象的方法可以catch到這個異常並可以對其進行處理  
+  > 一般情況下是用`try`進行Listen，如果系統會拋出（`throw`）一個Exception，可以通過它的類型來捕獲（`catch`）它，或通過`finally`來處理；
+  > 每當遇到一個`try`，異常的結構就會被PUSH到EXCEPTION STACK中，直到所有的`try` blocks都PUSH完畢
+  >> 如果下一級的`try`沒有對某種異常進行處理，EXCEPTION STACK就會執行POP, 直到遇到有處理這種異常的`try`或者最終將異常拋給JVM  
+
+- 運行時異常與受檢異常有何異同？ 
+  > 異常表示Program在runtime過程中可能出現的非正常狀態，RuntimeException表示JVM的通常操作中可能遇到的異常，是一種常見運行錯誤，只要程式設計得沒有問題通常就不會發生  
+  > Checked異常跟Program's Context環境有關，即使Program設計無誤，仍可因使用的問題而拋出異常  
+  > Java編譯器要求方法必須聲明拋出可能發生的Checked異常，但是並不要求必須宣告拋出未被catch的`RuntimeException`  
+
+異常和繼承一樣，是OOP中經常被濫用的東西，在Effective Java中對異常的使用給出了以下指導原則： 
+- 不要將異常處理用於正常的控制流（設計良好的API不應該強迫它的呼叫者為了正常的控制流而使用異常） 
+- 對可以恢覆的情況使用checked exception，對Prgram錯誤使用`RuntimeException` 
+- 避免不必要的使用checked exception（透過一些狀態檢測機制） 
+- 優先使用標準的exception 
+- 每個方法拋出的異常都要有文檔 
+- 保持異常的原子性 
+- 不要在`catch`中忽略掉`try`捕獲到的exception
+
+- 常見的RuntimeException 
+  > ArithmeticException
+  > ClassCastException 
+  > IllegalArgumentException （非法參數異常） 
+  > IndexOutOfBoundsException 
+  > NullPointerException 
+  > SecurityException （安全異常）
+
+
 
 ## [Generic](https://ethan-imagination.blogspot.com/2018/11/javase-gettingstarted-017.html)
 
