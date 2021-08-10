@@ -2,6 +2,7 @@
 # Java Quick Review
 
 ## Modifier 
+
 ```java
 /**
   * declaration
@@ -14,98 +15,121 @@ access-specifier storage returnType function(parameters)
 3. private
 4. default (No modifier)
 
-access-specifier for class 
-- CLASS可见表示其它类可以用这个类创建实例对象
-
 access-specifier for member
-- MEMBER可见表示其它类可以用这个类的实例对象访问到该成员；
+- 表示某Class's member的可見度
+  > 例如: Other Classes可以用這個Class的Instance access到該member
 
-### storage
-1. static 
-2. final
-3. abstract
-- a `static` member can be shared by all objects of classA and objects which inherit from classA
+#### Access Control for the Class
 
-## Access Control for the Class
-1. public    : Accessed By Any classes
-2. default   : Accessed By the Classes Within the same package 
-3. protected : **Accessed By the classes and the sub-classes IN THE SAME PACAKAGE** (e.g. `clone()`)
-4. private   : Accessed only By members(fields and method) in same class
-
-### Visibility Within pakacge
-
+Visibility Within pakacge   
 | Access Specifier              |  Accessible to a SUBCLASS inside A same package | Accessible to all OTHER CLASSES in the same package |
 | ---                           |     ---                                         |     ---                                             |
 |  default(no modifier)         |     Yes                                         |     Yes                                             |
 |  public                       |     Yes                                         |     Yes                                             |
 |  protected                    |     Yes                                         |     Yes                                             |
 |  private                      |     No                                          |     No                                              | 
-
 - Use `default` when classes and `public void main()` inside the same package  
 
 
-### Visibility Outside the class's package
-
+**Visibility Outside the class's package**   
 | Access Specifier      |  Accessible to a SUBCLASS outside the same package | Accessible to all OTHER CLASSES outside the same package |
 | ----                  |     ---                                            |     ----                                                 |
 |  default(no modifier) |     No                                             |     No                                                   |
 |  public               |     Yes                                            |     Yes                                                  |
 |  protected            |     Yes                                            |     No                                                   |
 |  private              |     No                                             |     No                                                   | 
-
-- **The derived can not access base's private member but it can be accessed via public method or protected method of base class**
+- **The derived can not access base's private member but it can be accessed via public method/protected method from base class**
 - **`protected`通常都用來修飾MEMBERS(e.g. methods)，表示`protected members`在繼承時對於其Subclass是可見的，但是這個訪問修飾符對於Class沒什麼意義。**
 
 ### Access Specifier for a Class 
 1. Do not declare more than one `public` class in same file   
 2. `pubic` class name should be the same as file name. e.g. filename : `X.java` => class name : `public class X`  
 3. **non-public class only can be accessed by same package's classes**.  
-   > `public` class A: Any Classes can inherit from it and uses it(and its methods)   
+   > `public` class A: Any Classes can inherit from it and uses it(and its methods) => Accessed By Any classes
    > `private` class A: Members in class A can only be accessed by method **in the same class**, cant not be the base class   
-   > `protected` class A: Members in class A only can be accessed by same package's classes, and other classes from other packages can inherit from it, but can't access the protected members in class A    
-4. No access-specifier : Only classes in same package can inherit from it
+   > `protected` class A: Members in class A only can be accessed by same package's classes or its subclasses, and other classes from other packages can inherit from it    
+   >  `default` class A : Only classes in same package can inherit from it => Accessed By the Classes Within the same package
 
-### Protected Member in the Base Class
+# OOP
 
-Protected members in a class may ony be accessed by methods in a subclass and the methods in the same package.
+[class and object](https://medium.com/@nwyyy/design-pattern%E5%88%9D%E5%BF%83%E8%80%85%E7%AD%86%E8%A8%98-1-95774a905010)   
+
+Object-oriented programming (OOP) is a programming paradigm based on the concept of objects, which can contain data and code: data in the form of fields (often known as attributes or properties), and code, in the form of procedures (often known as methods).
+
+## 物件導向的四個根基
+
+#### Encapsulation(將資料以及行為隱藏起來)  
+
+物件將其本身的資料以及行為 (behaviors) 包裝在物件內部，外界除了透過物件所開放的成員 (ex: 屬性，方法，事件等) 使用物件外，**不需知道物件內部的各種實作細節**
+Group all relevant things together. I.e. encapsulation is wrapping/binding up of data and member functions in single unit. 
+- In simple, abstraction is hiding the implementation and encapsulation is to hide data.
+
+#### Polymorphism
+
+Polymorphism describes a pattern in object oriented programming in which classes have different functionality while sharing a common interface.
+
+相同性質的Class相同名稱Method的行為，會依物件特性不同而有所不同，這個性質經常出現在介面實作以及抽象類別的覆寫(override)上(an object exhibits different behavior in different situation. In simple way)   
+> 例如一個 Car 物件，定義有一個`getEngineProperties()`方法來取得引擎資訊，但 2000 年的車子和 2011 年的車子引擎資訊可能略有不同，而不同車子的引擎也未必相同，所以這些 Car 的子類別都會覆寫`Start()`方法，並且在用戶端存取不同的Car物件的`getEngineProperties()`方法時，會得到不同的結果  
+
 ```java
-public class GradedActivity2
-{
-    /**
-      * <p> protected member {@code score}  
-      *     can be accessed by subclass  </p>
-      */
-    protected double score; 
-    
-    public void setScore(double s)
-    {
-       score = s;
-    }
+/**
+  * <p> There are numbers way `encrypt()` methods 
+  *     (polymorphism) </p>
+  */
+public abstract Encryption{
+
+ abstract void Encrypt()
 }
 
-public class Exam extends GradeActivity2
-{
-    //...
-    public Exam(int question, int miss)
-    {
-        //...
-        int s = (question - miss)*2;
-        setScore(s);
-        // The derived class Exam access the portect member of base 
-    }
-}
+/**
+  *Encrupt()
+  *  '---------> Caser 
+  *  '---------> ASE 
+  *  '---------> RSA
+  * so Caser , ASE and RSA have their own encryption, that is why we must override the method encrypt() from class Encryption
+  */
 ```
 
-## [Inheritance](https://github.com/CyC2018/CS-Notes/blob/master/notes/Java%20%E5%9F%BA%E7%A1%80.md#%E5%85%AD%E7%BB%A7%E6%89%BF) 
+#### Abstraction (你只需要知道它可以的功能,不必知道功能怎麼實現的)
 
-一個良好的OOP/OOD會隱藏所有實現(implementations)細節,把它的 API 與它的implementation清晰地隔離開  
-- 模組之间只透過它们的 API 溝通，一個模組不需要知道其他模組的内部工作情況，我們把概念稱作訊息隱藏或封装
-  > 因此Access-Control應盡可能地使每個Class或者Member不被外界訪問
+- Show only necessary thing to user that he required, not extra information (use `public private, protected`).  
+- Abstraction is done when we need to inherit from certain class but do not instantiate the objects of that class.
 
+For example ::   
+The user can change the channels, increase the volume, change the brightness etc. He does not have to know about the internal circuitry of the controller to operate. Abstraction is similar to that.
+
+Programming languages such as Java support Abstraction.   
+The programmer can implement abstraction using concepts such as `abstract` class and `interface`.     
+- Firstly, an abstract class can consist of abstract and non-abstract methods. 
+  > A class that extends an abstract class have to provide the implementations for the abstract methods. 
+- Secondly, an interface is a collection of abstract methods. 
+  > It does not have non-abstract methods. Therefore, the class that implements an interface has to provide the implementations or method definitions to all abstract methods in the interface. 
+
+Overall, abstraction helps to reduce the complexity of the system.
+
+#### Inheritances (相同的功能不用在重實作一遍)
+The developer does not have to write the code from the beginning. Instead, he can use the already existing code and develop the rest. 
+Therefore, **inheritance allows code reusability.**   
+
+透過繼承的方式，可以複製父物件所有public/protected member (透過存取修飾子設定) 的功能，外界在存取子物件時也可以得到父物件的所有public/protected member的功能,而子物件本身也可以存取到父物件所開放的功能，或是進一步改變父物件的行為(override)
+
+1. **Inheritance enables you to create new classes that re-use, extend and modify the behaviour that is defined in other classes**  
+2. **Inheritance is the methodology of using properties and methods of an already existing class in a new class.**   
+   > The existing class is the parent or superclass while the new class is the child or subclass. 
+
+**The main difference between abstraction and inheritance is that abstraction allows hiding the internal details and displaying only the functionality to the users, while inheritance allows using properties and methods of an already existing class** [source](https://pediaa.com/what-is-the-difference-between-abstraction-and-inheritance/#:~:text=The%20main%20difference%20between%20abstraction,of%20an%20already%20existing%20class.&text=A%20class%20is%20a%20blueprint,an%20instance%20of%20a%20class.).  
+
+![image](https://user-images.githubusercontent.com/68631186/128846000-d2ae0501-6980-4a35-ad51-91f1a1390918.png)  
+
+一個良好的OOP/OOD會隱藏所有實現(implementations)的**DETAILS**,把它的API與它的implementation清楚地隔離開(decoupling)  
+**模組之間只透過他們API進行溝通，一個模組不需要知道其他模組的内部工作情況，我們把概念稱作訊息隱藏或封装**  
+> 例如我們利用instance提供的method(e.g setter/getter)來訪問某模組內的某個功能  
+
+## [Inheritance](https://github.com/CyC2018/CS-Notes/blob/master/notes/Java%20%E5%9F%BA%E7%A1%80.md#%E5%85%AD%E7%BB%A7%E6%89%BF)  
+**當sub class的方法Override了Base class，則sub中該方法的access control不能低於base的**, 原因是為了確保可以使用base實例的地方都可以使用sub實例去代替，也就是符合Liskov Substitution Principal    
 
 ### `Is-A` Relationship Does Not Work In Reverse
-**如果sub的方法Override了Base的方法，則sub中該方法的訪問級別不允许低于base的訪問級別**  
-為了確保可以使用base實例的地方都可以使用sub實例去代替，也就是满足里氏替换原则  
+
 ```java
 /**
   *  Big ------------------------- Small
@@ -140,74 +164,84 @@ if (exam instanceof GradedActivity) // it will return true
    System.out.println("Yes, activity is a GradedActivity.");
 else
    System.out.println("No, activity is not a GradedActivity.");
-
 ```
 
-## `static`
-A `static` variable is shared by everyone in this class or it's subclass  
+## `static` keyword
 
-A `static` method access static variable directly without allocating the object of that class  
+- A `static` Field is shared by everyone in this class or it's subclass  
+   > In thread, each thread create its own local cache to share `static` variable  
+   > **EACH STATIC Field IN EACH THREAD IS ONLY SHARED BY THAT THREAD**    
 
-```java
-System.out.println();
-/**
-  * class name : System 
-  * static member : out
-  * static method : println
-  */
-```
-
-Always Call static member with `.`
-```java
-ClassName.staticMember;
-```
-
-Static member As global variable
-```java
-/** 
- * {@code count} would never reset, and shared by account's objs
- * keep increasing when {@code Account} is called
- * and every different account objs have its sunique SID
- */
-class Account{
-  static long count = 0;
-  private long SID;
-  Account(){
-    count++;
-    SID=count
+- A `static` method can access `static` variable directly without allocating the object(instance) of that class  
+  > FOR EXAMPLE
+  ```java
+  System.out.println();
+  /**
+    * <li> Class Name: System     </li> 
+    * <li> Static Member: out     </li>
+    * <li> Static Method: println </li>
+    */
+  ```
+- Always Call static member with `.`
+  ```java
+  ClassName.staticMember;
+  ```
+- Static Field As global variable
+  ```java
+  /** 
+   * {@code count} would never reset, and shared by account's objs
+   * keep increasing when {@code Account} is called
+   * and every different account objs have its sunique SID
+   */
+  class Account{
+    static long count = 0;
+    private long SID;
+    Account(){
+      count++;
+      SID=count
+    }
   }
-}
-```
-1. fields and methods in a class can be used only after `new` a Account object
-2. static methods can't access non-static member (fields/methods)
+  ```
 
-```java 
-// What static method could do
-Public Employee{
-  static int count;
-  //...
-  public static int getCount(){
-    return count; 
+- Non-Static Fields and methods in a class can be used only after `New` a object
+  > Static methods can't access non-static member 
+  ```java 
+  // What static method could do
+  Public Employee{
+    static int count;
+    //...
+    public static int getCount(){
+      return count; 
+    }
+    //...
   }
-  //...
-}
 
-/**
-  * <p> We dont have to new a object 
-  *     to use {@code static} methods/fields </P.
-Employee.getCount(); 
+  /**
+    * <p> For Static Method,  We dont have to new a object </p>
+    */
+  Employee.getCount(); 
 
-//Else if obj of Employee exists say e1 then
-e1.getCount();
-```
+  /**
+    * <p> Else if obj of Employee exists 
+    *     ,says e1 then </p>
+    */
+  e1.getCount();
+  ```
 
-## Garbage Collection 
-call method `finalize` to release the memory while doing Termination housekeeping in case of **Memory Leaks**
+## `finalize` keyword  
+Like `delete` in Cpp
 
+`finalize` to release the memory while doing Termination housekeeping in case of **Memory Leaks**  
 1. method `finalize` returns `void`
 2. method `finalize` may not be executed even program reachs it's end
 
 ## `final` keyword
+Same as in Cpp program   
+
+- `final` class : can't be a base class
+- `final` method: can't be overriden
+- `final` field : a constant
+
 ```java
 final dataType VAR = value;
 /**
@@ -216,105 +250,62 @@ final dataType VAR = value;
   */
 ```
 
-Same as in Cpp program
-- `final` class : can't be a base class
-- `final` method: can't be overriden
+## Package and Name Space 
+Java Package ist wie `.h` in Cpp.  
+Java Packages are namespaces.  
+A Package contains needed class for a project (e.g. `java.util.*` to use `HashMap` ... etc ).   
 
-### Usage of `final`
-
-```java
-/**
-  * priciple of least privilege ( ME is DA BOSS )
-  * <p> `final` variable should always explictly declared </p>
-  */
-class increment
-{
-  private int total = 0;
-  private final int INCREMENT;
-
-  public Increment(int incrementValue){
-    INCREMENT = incrementValue; 
-  }
-}
-```
-
-## Package 
-Es ist wie `.h` in Cpp
-
-Creat a package in bash
+To Creat a package in bash
 ```console
 javac -d . filename.java
 ```
-Name of package
+
+The Namespace(package)
 ```java
 //LARGE-----------SMALL
 tw.network.nkust.csie;
 ```
-Import the package
+
+Import (namespace) the package to use
 ```java
 import tw.network.nkust.csie;
 iport java.util.*
 ```
 - `*` all public classes in java.util can be used..
 
-### namespace of JAVA
-To avoid name conflit in different files
-
-```java
-package practice;
-public class Increment 
-{
-  //.....
-}
-```
-```java
-/**
-  * <p> import to test.java </p>
-  */
-import practice.Increment;
-pubic class test{
-  //...
-}
-```
-
 Compiler uses **class loader** to find the package and it search the package first from
 1. search from JDK's standard liberary  , if not
 2. search optional package , if not
 3. search from classspath (package list)
 
+There might having same class name existing in our project, For example  
+```java
+/**
+  * For such case
+  * we need to specificly declare the variable
+  */
+import com.method.practice;
+import tw.practice;
+pubic class test{
+    //...
+    tw.practice p1 = new tw.practice();
+    practice p2 = new practice();
+}
+```
 
 ## Abstract
 
-### Polymorphism
-```java
-/**
-  * <p> There are numbers way `encrypt()` methods (polymorphism) </p>
-  */
-public abstract Encryption{
-
- abstract void Encrypt()
-}
-
-/**
-  *Encrupt()
-  *  '---------> Caser 
-  *  '---------> ASE 
-  *  '---------> RSA
-  * so Caser , ASE and RSA have their own encryption, that is why we must override the method encrypt() from class Encryption
-  */
-```
 - When an `abstract` method appears in the class, the method must be overridden in the subclass
 - When a Class Contains an abstract method, you cannot create an instance of the class.
 - An abstract class is not instantiated, but other classes extend it.
 - An abstract class method has no body and must be overriden in a subclass
-
 
 ```java
 /**
   * A Abstract Class
   * <pre> AccessSpecifier abstract class ClassName </pre>
   */
-/*public or protected*/ abstract class Name{
+  /*public or protected*/ abstract class Name{
   
   // A Abstract Method
   /*public or protected*/ abstract returnType methods(parameters);
@@ -324,77 +315,23 @@ public abstract Encryption{
 ```
 
 
-# Interface 
+## Interface 
+- Interface是Abstract的延伸，Before Java 8，它可以看成是一個完全ABCs(Class only with abstract methods)，也就是說它不能有任何的方法實現
 
-- Interface是Abstract的延伸，在 Java 8 之前，它可以看成是一個完全抽象的類，也就是說它不能有任何的方法實現。 
+- Since Java 8, Interface新增的`default`方法實作,減少未來程式擴充的維護Cost  
+  > Before Java 8，當某個Interface想要新增新的方法，得要修改所有實作(Implement)該Interface的類別(class)，讓它們都實作新增的方法 [MORE DETAILS](https://matthung0807.blogspot.com/2017/09/java-interfacedefault-methods.html)  
 
-- 從 Java 8 開始, Interface也可以擁有默認(Default)方法實現，這是因為不支持默認方法的Interface的維護成本太高了。
-  > 在 Java 8 之前，如果一個Interface想要添加新的方法，那麼要修改所有實現了該接口的類，讓它們都實現新增的方法。
-
-- Member of Interface : 
-  > `public` by default，並且不允許定義為`private` 或者`protected`的Member
-  >> **從 Java 9 開始，允許將方法定義為 private，這樣就能定義某些復用的代碼又不會把方法暴露出去。**
-  > fields' keyword `static` and `final` By default
-
-## Implementing Multiple Interface
-
-```java
-public class ACLASS implements INTERFACE1,
-                               INTERFACE2,
-                               INTERFACE3
-```
-
-For example
-```java
-/**
-  * Deposit implements Exchange and BackAccount
-  *                +-->(I)Exchange            
-  *      Deposit---|     
-  *                +-->(I)BackAccount
-  */
-interface BankAccount
-{
-      /**
-        * Fields in interface 
-        * are {@code final} type 
-        */
-      double saveRate = 2.2.5;
-      abstract void getInterest();
-}
-
-interface Exchange
-{
-      abstract void setExchange(double e);
-}
-
-/**
-  * Implementation
-  */
-class Deposit implements BankAccount, Exchange{
-    private int savBalance ;
-    private double exchange;
-    
-    public Deposit(int s){
-        savBalance = s;
-    }
-    
-    @Overide
-    public void getInterest(){
-        //..
-    }
-    
-    @Overide
-    public void setExchange(double e){
-        //..
-    }
-}
-```
+- Member in the Interface : 
+  > `public` by default，不允許定義為`private` 或者`protected`的成員Members. **Since Java 9，允許將方法定義為`private`，這樣就能定義某些復用的程式又不會把方法暴露出去[Example GeekForGeek](https://www.geeksforgeeks.org/private-methods-java-9-interfaces/)**     
+  > Keyword `static` and `final` for fields by default    
 
 ## Interface Vs Abstract Class 
-[More Details](https://stackoverflow.com/questions/1913098/what-is-the-difference-between-an-interface-and-abstract-class)  
+[More Details](https://stackoverflow.com/questions/1913098/what-is-the-difference-between-an-interface-and-abstract-class)   
 
-- abstract  : only inherit from one class
-- interface : mutiple inheritations 
+- `abstract class`
+  > inherit only from one class  
+- `interface` 
+  > have mutiple inheritations   
 
 ```java
 abstract class Animal{
@@ -404,39 +341,41 @@ abstract class Animal{
 interface Pet{
   //..
 }
+
 public class Dog extends Animal implements Pet{
   //...
 }
 ```
 
 ```java
-//多重繼承
-Interface derived extends InterfaceBase1, InterfaceBase2{
+//Interface EXTENDS MULTIPLE INTERFACES
+interface derived extends InterfaceBase1, InterfaceBase2{
   // create new static variable , new abstract methods
 }
 
-// implementation 
+//Implementation 
 class A implements interfacebase1, interfacebase2{
   // implements methods of intefacebase1 and interfacebase2 
 }
 ```
-
-- Abstract classes can have constants, members, method stubs (methods without a body) and defined methods, whereas interfaces can only have constants and methods stubs.
-- Methods and members of an abstract class can be defined with any visibility, whereas** all methods of an interface must be defined as public (they are defined public by default)**.
+- Abstract classes can have constants, members, method stubs(methods without a body) and defined methods, whereas interfaces can only have constants and methods stubs.
+- **Methods and members of an abstract class can be defined with any visibility**, whereas all methods of an interface can be defined as `public`, `private`, and `default`.
 - When inheriting an abstract class, a concrete child class must define the abstract methods, whereas **an abstract class can extend another abstract class and abstract methods from the parent class don't have to be defined.**
 - Similarly, **an interface extending another interface is not responsible for implementing methods from the parent interface.** This is because interfaces cannot define any implementation.
-- **A child class can only extend a single class (abstract or concrete)**, whereas **an interface can extend or a class can implement multiple other interfaces**.
+- **A sub class can only extend a single class (abstract or concrete)**, whereas **an interface can extend or a class can implement multiple other interfaces**.
 
 - **A child class can define abstract methods with the same or less restrictive visibility**, whereas a class implementing an interface must define the methods with the exact same visibility (`public`).
 
-- `Absract`提供了一種`IS-A`關係，需滿足里式替換原則，即Sub的object必须能夠替換掉所有base的對象。  
-- `INTERFACE`更像是一種`LIKE-A(HAS-A)`關係，只提供方法的抽象實作，並不要求INTERFACE和IMPLEMENTATIONS具有`IS-A`關係。
+- `absract class` : `IS-A` Relationship，需滿Liskov Substitution Principle，即Sub Class's object必須能夠替換所有Base Class's Object    
+- `intface`       : `LIKE-A(HAS-A)` Relationship，it contains abstract methods. There is no `IS-A` Relationship btw `interface` and implementations  
 
-從使用上来看，A Class可以implements multiple `Interface`s，但是不能extends多個`Abstract`s。
-- `Interface`的Keyword只能是`static`和`final`类型的，而`Abstract`的Keyword無此限制。
-- `Interface`的Member只能是`public`的，而`Abstract`的Member可以有不同的Access Controls。
+A Class can implement multiple `interface`s but it can not extend multiple `abstract class`es。
+- `interface`'s Keyword has only `static` or `final`
+  > `abstract class`'s has no constraint  
+- `interface`'s Members have only `public`,`priave` or `default`  
+  > `abstract class`'s Members have different Access Controls  
 
-### 判斷依據
+### 使用的判斷依據
 
 Interface  
 - 需要讓UNRELATED的Classes都實現一個某種(規範)方法
@@ -447,14 +386,12 @@ Interface
 Abstract  
 - RELATED : 需要被SHARED在幾個RELATED的CLASSES 
 - ACCESS CONTROL : 需要能控制繼承來的成員的ACCESS CONTROL，而不是都為`public`
-- NON-STATIC AND NON-FINAL : 需要繼承非STATIC和非FINAL FIELDS
+- `static` AND `final` : 需要繼承非STATIC和非FINAL FIELDS
 
-IN MANY CASES，INTERFACE優先於ABSTRACT。因為INTERFACE沒有ABSTRACT嚴格的CLASS層次結構要求，可以靈活地為一個CLASS添加BEHAIOUR。
-> Since Java 8，Interface也可以有DEFAULT的方法實作，使得修改INTERFACE的COST也變的很低    
+IN MANY CASES，考慮`interface`應優先於`abstract class`, 因為`interface`沒有`abstract class`嚴格的CLASS層次結構要求，更彈性地為類別class添加更多BEHAIOURS
+> Since Java 8 and Java 9，`interface`也可以有`default` method實作以及`private` membber，`interface`的維護COST也變的很低    
 
 
-
-## Interface and Inheritance Together 
 
 Just like `pure virtual function` in cpp
 - It contains only abstract methods. 
@@ -463,9 +400,6 @@ Just like `pure virtual function` in cpp
 `interface` is used instead of the keyword `class`
 - The methods that are specified in an interface have no bodies
 - Only headers that are terminated by semicolons 
-
-All declarations in interface class are `public abstract` methods also variables are `public` , `static` , `final` by default  
-so we dont have to write down these keywords or specifiers in interface class  
 
 ```java
 // methods in interface class are
@@ -528,29 +462,15 @@ class Rectangle2 extends GrphicsObj implements Paintable
 }
 ```
 
-## `default` Methods since Java 8
-
-A default method is an interface method that has a body.
-```java
-public interface Displayable
-{
-    default void display()
-    {
-        System.out.println("This ...");
-    }
-}
-```
-
 ## `SUPER`
 Sub class一定會call Constructor from baseclass來完成初始化(一般是call default Constructor of baseclass)
 
-BUT
-如果子類需要調用父類其它Consturctors，就需要用到`super()`了   
-當子類`@override`了父類的某個方法，可以通過使用`super`來reference該方法   
+- 如果sub class需要呼叫base class其它Consturctors，就需要利用`super()`做呼叫   
+- 或者當sub class `@override`了base class的某個方法，可以通過使用`super`來reference該overriden方法   
 
 ## `override` and `overload`
 
-> 當Sub class實作了一個與base class在方法聲明上完全相同的一個方法。
+Override : 當Sub class實作了一個與base class在方法聲明上完全相同的一個方法。
 
 為了滿足L式替換原則，Override有以下三個限制：
 - `Access-specifier` : Sub方法的訪問權限必須大於等於父類方法；
