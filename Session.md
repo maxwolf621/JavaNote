@@ -1,7 +1,7 @@
 
-[Reference](https://ithelp.ithome.com.tw/articles/10246787)
-
-# Crerate A Session
+[Reference](https://ithelp.ithome.com.tw/articles/10246787)  
+[Cookie](cookie.md)   
+# Crerate A Session  
 ```java
 public class SessionServlet extends BaseServlet {
 	private static final long serialVersionUID = 1L;
@@ -33,22 +33,33 @@ public class SessionServlet extends BaseServlet {
 }
 ```
 
-## Servlet's request and response attributes
+## Set Up Servlet's request and response attributes
+
+via `setAttribute(key, paire)` and `getAttribute(key)`
+
 ```java  
+/**
+  * {@code setAttribute} 
+  */
 protected void setAttribute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
-		// set up the attribute of payload 
+		
+		// set up the attribute of payload  
 		session.setAttribute("A", "Avalue");
+		
 		// now response will include "A" : "Avalue"
 }
 
-
+/**
+  * {@code getAttribute}
+  */
 protected void getAttribute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
   HttpSession session = request.getSession();
   
   // get the attribute A from session
   String value = (String) session.getAttribute("A");
-  // we can print out the value ... etc 
+  
+  // we can print out the value ... etc ...
 }
 ```
 
@@ -79,9 +90,9 @@ session.invalidate(); 			            // Set session InActive
 1. Client sent the request
 2. servlet created a `session_id` and sent back a response contained with cookie whose name is `session_id`
 ```diff
-+ client --  request xxx.example.com/[queryparams] ---> servlet
-- servlet -- response ( contained cookie for session_id ) --> client
-+ client -- request ( contained cookie for session_id ) --> servlet
++ client  -request : xxx.example.com/[queryparams]-> servlet
+- servlet -response ( contained cookie for session_id )-> client
++ client  -request  ( contained cookie for session_id )-> servlet
 ```
 After client receives the cookie from response and saves it in local storage/browser   
 so then the servlet can compare the `session_id` with the one sent by client within the expiration of the cookie
