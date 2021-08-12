@@ -2,20 +2,23 @@
 [http, session and cookie](https://tw.alphacamp.co/blog/cookie-session-difference)   
 [http security](https://tw.alphacamp.co/blog/http-https-difference)  
 
-### HTTP is a stateless protocol.  
+### Stateless Protocol
 [HTTP METHODS](https://ithelp.ithome.com.tw/articles/10227433)  
+
 **A stateless protocol does not require the server to retain information or status about each user for the duration of multiple requests.**  
-But some web applications may have to track the user's progress from page to page for example   
-- when a web server is required to customize the content of a web page for a user. 
- - Solutions for these cases include (these are important for Oauth2 concept):
-   > the use of HTTP cookies. (重點)  
-   > server side sessions (重點)  
-   > hidden variables (when the current page contains a form)  
-   > URL-rewriting using URI-encoded parameters, e.g., `/index.php?session_id=some_unique_session_code`.  
+But some web applications may have to track the user's progress from page to page 
+
+For Example   
+- WHEN a Web Server is **required to customize the content** of a web page for a user   
+  > Solutions for these cases include (THESE are important for `Oauth2` concept):
+    - THE USE of HTTP cookies. (重點)  
+    - Server side sessions     (重點)  
+    - Hidden variables (WHEN the current page contains a form)  
+    - URL-rewriting using URI-encoded parameters, e.g. `/index.php?session_id=some_unique_session_code`.  
 
 ## Session for stateless HTTP
 
-讓stateless的HTTP能得知使用者狀態的方法；簡單來說，就是Servlet透過Header的屬性`Set-Cookie`，把使用者的狀態紀錄成儲存在使用者電腦裡的Cookie，而**Browser在每一次發送Request時，都在 Header中設定Cookie屬性，把Cookie帶上，Servlet就能藉由檢視Cookie的內容，得知瀏覽器使用者的State**；而像是「從登入到登出」、「從開始瀏覽網頁到 Cookie 失效」，或是**任何伺服器能認出使用者狀態的時間區間，就叫做Session**
+讓stateless的HTTP能得知使用者狀態的方法；簡單來說，就是Servlet透過Header的屬性`Set-Cookie`，把使用者的狀態(STATE)紀錄成儲存在使用者電腦(LOCAL STORAGE或BROWSER CACHE)裡的Cookie，當(Client's)Browser在每一次發送Request時，都會在Header設定Cookie屬性，把Cookie帶上，(Web Server)Servlet就能藉由Header檢視Cookie的內容，得知瀏覽器該使用者的狀態STATE；而像是「從登入到登出」、「從開始瀏覽網頁到 Cookie 失效」，或是**任何伺服器能認出使用者狀態的時間區間，就叫做Session**
 
 Browser's response
 ```json 
@@ -26,8 +29,7 @@ Set-Cookie: tasty_cookie=strawberry
 [page content]
 ```
 
-After storing the cookie in Browser.  
-The furture Request sent by it as the following 
+After browser receives the response from server and store the cookie in local storage.  
 ```json 
 GET /sample_page.html HTTP/1.1
 Host: www.example.org
@@ -35,63 +37,107 @@ Cookie: yummy_cookie=choco; tasty_cookie=strawberry
 ```
 
 ## POST AND GET METHOD
+
 ![image](https://user-images.githubusercontent.com/68631186/125323654-9e34c480-e371-11eb-9367-2919630ef1a6.png)
 
 ## POST AND PUT METHOD
-[POST AND PUT](https://progressbar.tw/posts/53)  
-POST : 複製人不同編號(ID) , 每POST一次就新增一個複製人新編號(ID)    
-PUT  : 同一人同編號(ID), 每PUT就UPDATE這個人資訊    
+[POST AND PUT](https://progressbar.tw/posts/53)   
 
-### 敏感資訊
-就 HTTP/1.1 對 GET 的規範來說，是從指定的 URI「取得」想要的資訊，指定的 URI 包括了請求查詢（Query）部份，  
-例如 `GET /?id=0093` 瀏覽器會將指定的 URI 顯示在網址列上。  
-> 所以如果是`password`、`session_id` 等敏感資訊，就不適合使用`GET`發送
+POST : 複製人不同編號(ID), 每POST一次就新增(ADD)一個複製人新編號(ID)    
 
-![image](https://user-images.githubusercontent.com/68631186/127016945-91a33030-5363-4147-b895-d0e3103691aa.png)  
+PUT  : 同一人同編號(ID), 每PUT就更新(UPDATE)此人資訊    
 
-另一個問題在於 HTTP 的 `Referer` 標頭，這是用來表示從(soruce)哪裡連結到目前的網頁(dst)，如果你的網址列出現了敏感資訊，之後連接到另一個網站，該網址就有可能透過 Referer 標頭得到敏感資訊。
-`HTTP/1.1` 對 `POST` 的規範，是要求指定的 `URI`「接受」請求中附上的實體（`Entity`），像是儲存為檔案、新增為資料庫中的一筆資料等... 
-由於要求伺服器接受的資訊是附在請求本體（`Body`如下圖）而不是在 `URI`，**瀏覽器網址列不會顯示附上的資訊，傳統上敏感資訊也因此常透過 POST 發送**  
+### HTTP敏感資訊
+
+就`HTTP/1.1`對`GET`的規範來說，是從指定的`URI`「取得」想要的資訊，指定的`URI`包括了請求查詢（Query）部份，  
+- 例如 `GET /?id=0093` 瀏覽器會將指定的`URI`顯示在網址列上。  
+  > 所以如果是`password`、`session_id` 等敏感資訊，就不適合使用`GET`發送
+
+![image](https://user-images.githubusercontent.com/68631186/127016945-91a33030-5363-4147-b895-d0e3103691aa.png)   
+
+另一個問題在於`HTTP`的 `Referer`標頭，這是用來表示從(source)哪裡連結到目前的網頁(destination)，如果你的網址列出現了敏感資訊，之後連接到網站B，該網址就有可能透過`Referer`標頭得到敏感資訊  
+`HTTP/1.1` 對`POST`的規範，是要求指定的`URI`「接受」請求(REQUEST)中附上的實體（`Entity`），像是儲存為檔案、新增為資料庫中的一筆資料等... 
+由於要求伺服器接受的資訊是附在請求本體（`Body`如下圖）而不是在`URI`，瀏覽器網址列不會顯示附上的資訊，傳統上敏感資訊也因此常透過`POST`發送  
 ![image](https://user-images.githubusercontent.com/68631186/127017382-aa7cbe05-8493-425e-b2fa-17a7ac85d411.png)  
 
 ### 發送的資料長度 
 雖然`HTTP`標準中沒有限制`URI`長度，然而各家瀏覽器對網址列的長度限制不一，伺服器對`URI`長度也有限制，因此資料長度過長的話，就不適用`GET`請求。
 - **`POST`的資料是附在請求本體（`Body`）而不是在`URI`，不會受到網址列長度限制，因而 POST 在過去常被用來發送檔案等大量資訊**
 
-### 書籤設置考量 
-**由於瀏覽器書籤功能是針對網址列**，因此想讓使用者可以針對查詢結果設定書籤的話，可以使用 `GET`, `POST`後新增的資源不一定會有個`URI`作為識別，基本上無法讓使用者設定書籤。
+### 書籤(bookmark)設置考量 
+**由於瀏覽器書籤功能是針對網址列**，因此想讓使用者可以針對查詢結果設定書籤的話，可以使用`GET`, `POST`後新增的資源不一定會有個`URI`作為識別，基本上無法讓使用者設定書籤。
 
 ### 瀏覽器快取（Cache）  
-只要符合 `HTTP/1.1`對Cache的要求，`GET`的回應是可以被**快取**的，最基本的就是指定的`URI`沒有變化時，許多瀏覽器會從快取中取得資料，不過，Server可以指定適當的Cache-Control Header來避免`GET` METHOD response 被快取的問題   
+只要符合`HTTP/1.1`對Cache的要求，`GET`的回應是可以被**快取**的，最基本的就是指定的`URI`沒有變化時，許多瀏覽器會從快取中取得資料，不過，Server可以指定適當的Cache-Control Header來避免`GET` METHOD response被快取的問題   
 
 至於`POST` METHOD Response，許多瀏覽器（但不是全部）並不會快取，不過`HTTP/1.1`中規範，如果伺服端指定適當的 Cache-Control 或 Expires Header，仍可以對`POST`的回應進行快取。
 
 [HTTP CACHE](https://blog.techbridge.cc/2017/06/17/cache-introduction/)
 
-### 安全與等冪區分
-由於傳統上發送敏感資訊時，並不會透過`GET`，因而會有人誤解為`GET`不安全，這其實是個誤會，或者說對安全的定義不同，就 HTTP 而言，在` HTTP/1.1` 第 9 節對 HTTP 方法的定義中，有區分了安全方法（Safe methods）與等冪方法（Idempotent methods） 
+### 安全與等冪
 
-Safe methods是指在實作應用程式時，使用者採取的動作必須避免有他們非預期的結果  
-慣例上,`GET`與`HEAD`(與`GET`同為取得資訊，不過僅取得回應Header)對使用者來說就是「取得」資訊，不應該被用來「修改」與使用者相關的資訊，像是進行轉帳之類的動作，它們是安全方法，這與傳統印象中 `GE`比較不安全相反。
-相對之下，`POST`、`PUT` 與 `DELETE` 等其他方法就語義上來說，代表著對使用者來說可能會產生不安全的操作，像是刪除使用者的資料等。
+###### Keyword : `Safe Method`, `Idempotent Method`, `Side Effect`
 
-安全與否並不是指方法對伺服端是否產生副作用（Side effect），而是指對使用者來說該動作是否安全,`GET`也有可能在伺服端產生Side Effect  
-對於副作用的進一步規範是在方法的等冪特性，`GET、HEAD、PUT、DELETE` 是等冪方法，也就是單一請求產生的副作用，與同樣請求進行多次的副作用必須是相同的  
-> For example 若使用`DELETE`的副作用就是某筆資料被刪除，相同請求再執行多次的結果就是該筆資料不存在，而不是造成更多的資料被刪除  
+由於傳統上發送敏感資訊時，並不會透過`GET`，因而會有人誤解為`GET`不安全，這其實是個誤會，或者說對安全的定義不同，
+
+就 `HTTP/1.1` 而言，區分了安全方法（Safe Method）與等冪方法（Idempotent Method） 
+
+### Safe Method
+
+**Request methods are considered safe if their defined semantics are essentially read-only**; i.e., the client does not request, and does not expect, any state change on the origin server as a result of applying a safe method to a target resource.
+> 是指在實作應用程式時，使用者採取的動作必須避免有他們非預期的結果  
+
+
+慣例上,`GET`與`HEAD`(與`GET`同為取得資訊，不過僅取得回應Header)對使用者來說就是「**取得**」資訊，不應該被用來「**修改**」與使用者相關的資訊，像是進行轉帳之類的動作，它們是安全方法，這與傳統印象中 `GET`比較不安全相反  
+
+相對之下，`POST`、`PUT` 與 `DELETE` 這些METHODS，代表著對使用者來說可能會產生**不安全**的操作，e.g. 刪除使用者的資料 ... etc 
+
+**安全與否並不是指METHOD對伺服端是否產生副作用（Side Effect），而是指對使用者來說該動作是否安全**,`GET`也有可能在伺服端產生Side Effect  
+
+### Idepotent Method
+
+A request method is considered idempotent if the intended effect on the server of multiple identical requests with that method is the same as the effect for a single such request. **And it's worthwhile to mention that idempotency is about the effect produced on the state of the resource on the server and not about the response status code received by the client.**  
+
+To illustrate this, consider the `DELETE` method, which is defined as idempotent.   
+Now consider a client performs a `DELETE` request to delete a resource from the server.  
+The server processes the request, the resource gets deleted and the server returns `204`.  
+Then the client repeats the same DELETE request and, as the resource has already been deleted, the server returns `404`.   
+Despite the different status code received by the client, the effect produced by a single `DELETE` request is the same effect of multiple DELETE requests to the same URI.
+Finally, requests with idempotent methods can be repeated automatically if a communication failure occurs before the client is able to read the server's response. The client knows that repeating the request will have the same intended effect, even if the original request succeeded, though the response might be different.
+> 對於Side Effect的進一步規範是在方法的等冪特性，`GET`、`HEAD`、`PUT`、`DELETE`以及safe request methods 是等冪方法，也就是**單一Request產生的Side Effect，與同樣請求進行多次的Effect必須是相同的**  
 
 `OPTIONS`與`TRACE`本身就不該有副作用，所以他們也是等冪方法  
-`HTTP/1.1`中的方法去除掉上述的等冪方法之後，換言之，只有`POST`不具有等冪特性  
-這是使得它與`PUT`有所區別的特性之一，在`HTTP/1.1`規範中,`PUT`方法要求將附加的實體儲存於指定的`URI`，如果指定的`URI`下已存在資源，則附加的實體是用來進行資源的更新，如果資源不存在，則將實體儲存下來並使用指定的`URI`來代表它，這亦符合等冪特性，例如用`PUT`來更新使用者基本資料，只要附加於請求的資訊相同，一次或多次請求的副作用都會是相同，也就是使用者資訊保持為指定的最新狀態。
+
+我們可以利用Idepotent來細分`POST`以及`PUT`之區別
+`POST`每一筆Request會造成Server上的資源進行變動(ADD) e.g. 新增新的使用者, 違反了Ideptotent的概念, 也是區別`POST`與`PUT`的特性之一，在`HTTP/1.1` Sepecification中,`PUT`方法要求將附加的Entity儲存於指定的`URI`，如果指定的`URI`下已存在資源，則附加的實體是用來進行資源的更新(UPDATE)，如果資源不存在，則將實體儲存下來並使用指定的`URI`來代表它(ADD)，這亦符合等冪特性，例如用`PUT`來更新使用者基本資料，只要附加於請求的資訊相同，一次或多次請求的副作用都會是相同，也就是使用者資訊保持為指定的最新狀態。
+> Like the definition of safe, the idempotent property only applies to what has been requested by the user; a server is free to log each request separately, retain a revision control history, or implement other non-idempotent side effects for each idempotent request.
+
+> 我們將需要利用Safe Method以及Idepotent Method概念考量選用特定METHOD作為Client-Server之間的資源傳輸  
+
+
+| Method  | Safe | Idempotent |
+|---------|------|------------|
+| CONNECT | no   | no         |
+| DELETE  | no   | yes        |
+| GET     | yes  | yes        |
+| HEAD    | yes  | yes        |
+| OPTIONS | yes  | yes        |
+| POST    | no   | no         |
+| PUT     | no   | yes        |
+| TRACE   | yes  | yes        |
 
 ### REST Api
 
-現在不少 Web 服務或框架支援 REST 風格的架構，REST 全名 REpresentational State Transfer，REST 架構由客戶端／伺服端組成，兩者間通訊機制是無狀態的（Stateless），在許多概念上，與 HTTP 規範不謀而合（REST 架構基於 `HTTP 1.0`，與 `HTTP1.1` 平行發展，但不限於HTTP）。
-- 符合 REST 架構原則的系統稱其為 RESTful，
-- 然而注意到以上的描述，並不是說`PUT`只能用於更新資源，也沒有說要新增資源只能用`POST`, 在等冪性時談過,`PUT`在指定的`URI`下不存在資源時，也會新建請求中附上的資源。等冪性是在選用`POST`或 `PUT`時考量的要素之一  
-- 另一個重要的考量要性，在 `HTTP/1.1` 中也有規範，也就是請求時指定的`URI`之作用
-- `POST`中請求的`URI`，是要求其背後資源必須處理附加的實體(`Entity`)，而不是代表處理後實體(`Entity`)的`URI`；然而`PUT`時請求的`URI`，就代表請求中附加實體(`Enitity`)的`URI`，無論是更新或是新增實體。
+現在不少 Web 服務或框架支援 REST 風格的架構，REST 全名 REpresentational State Transfer，**REST 架構由客戶端／伺服端組成，兩者間通訊機制是無狀態的（Stateless**，在許多概念上，與 HTTP 規範不謀而合（REST 架構基於 `HTTP 1.0`，與 `HTTP1.1` 平行發展，但不限於HTTP）。
 
-透過動詞(HTTP Methods)、名詞(URI/URL，代表目標資源)、內容型態(回應的內容，HTML、XML、JSON、etc.), **讓Stateless HTTP protocol能藉由 REST 的語意化設計，攜帶所有的狀態資訊降低對網路通訊的重複請求資源消耗
+- 符合 REST 架構原則的系統稱其為RESTful，
+  > 然而注意到以上的描述，並不是說`PUT`只能用於更新(UPDATE)資源，也沒有說要新增(ADD)資源只能用`POST`, 在等冪性時談過,`PUT`在指定的`URI`下不存在資源時，也會新建請求中附上的資源。等冪性是在選用`POST`或 `PUT`時考量的要素之一  
+
+- 另一個重要的考量要性，在 `HTTP/1.1`中也有規範，也就是請求時指定的`URI`之作用
+  > `POST`中請求的`URI`，是要求其背後資源必須處理附加的實體(`Entity`)，而不是代表處理後實體(`Entity`)的`URI`；然而`PUT`時請求的`URI`，就代表請求中附加實體(`Enitity`)的`URI`，無論是更新或是新增實體。
+
+透過動詞(HTTP Methods)、名詞(URI/URL，代表目標資源)、內容型態(回應的內容，HTML、XML、JSON、etc.), **讓Stateless HTTP protocol能藉由 REST 的語意化設計，攜帶所有的狀態資訊降低對網路通訊的重複請求資源消耗   
+
 透過 RESTful API 的設計風格，每個資源(Resource)都會得到一個到對應的位置（URL），並能透過 HTTP 語意化的方法
 ```xml
 [POST] /bookmarks  <!-- 是用來新增一筆資 -->
@@ -108,6 +154,7 @@ Safe methods是指在實作應用程式時，使用者採取的動作必須避�
 [HTTP SEO](https://ithelp.ithome.com.tw/articles/10225117)
 
 ## [SPA and MVC Structure](https://ithelp.ithome.com.tw/articles/10224772)  
+
 #### MVC
 ![](https://ithelp.ithome.com.tw/upload/images/20200908/20111380cEB9Gr0Y4q.png)  
 #### SPA
