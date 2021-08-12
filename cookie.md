@@ -356,10 +356,11 @@ protected void updateCookie(HttpServletRequest request, HttpServletResponse resp
 ```java
 /**
   * @apinote
-  *   To delete the cookie (stored in local storage) we need
-  *   set {@code setPath}'s @param    <pre> "/" </pre>
-  *   set {@code setMaxAge}'s @param  <pre> 0  </pre>
-  *   set {@code setValue}'s @param   <pre> "" </pre> 
+  *   To delete the cookie (stored in local storage) 
+  *   we need set each cookie's 
+  *   {@code setPath}   parameter   <pre> "/" </pre>
+  *   {@code setMaxAge} parameter   <pre> 0  </pre>
+  *   {@code setValue}  parameter   <pre> "" </pre> 
   */
 private void eraseCookie(HttpServletRequest req, HttpServletResponse res) {
     Cookie[] cookies = req.getCookies();
