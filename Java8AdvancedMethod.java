@@ -1,4 +1,42 @@
 /**
+  * <p> Conver {@code List} to {@code Map}
+  * {@link [List to Map](https://matthung0807.blogspot.com/2019/12/java-8-lambda-list-to-map.html)}
+  * via {@code stream()}
+  */
+public class Item {
+
+   private Long id;
+   private String name;
+
+   public Item(Long id, String name) {
+       this.id = id;
+       this.name = name;
+   }
+
+   public String toString() {
+       return "{id=" + id + "," + "name=" + name +  "}";
+   }
+
+   // getter setters...
+}
+
+
+// In Main 
+List itemList = Arrays.asList(
+        new Item(1L, "Stone"),
+        new Item(2L, "Grass"),
+        new Item(3L, "Dirt"));
+
+Map<Long, Item> itemMap = itemList.stream()
+                .collect(Collectors.toMap(Item::getId, Function.identity()));
+
+itemMap.forEach((k, v) -> {
+    System.out.println("key:" + k + ", value:" + v);
+});
+
+
+
+/**
   * <p> for each </p>
   */
 public class Main {
@@ -85,5 +123,4 @@ public class Main {
     private void instance_printList(String s) {
         System.out.print(s);
     }
-
 }
