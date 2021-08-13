@@ -1,5 +1,5 @@
 /**
-  * Usage of {@code asList}
+  * <p> Usage of {@code asList} </p>
   * {@link https://stackoverflow.com/questions/12030661/java-int-array-to-hashsetinteger}
   * {@link https://stackoverflow.com/questions/1073919/how-to-convert-int-into-listinteger-in-java}
   */
@@ -43,10 +43,9 @@ IntStream.of(ints) // return IntStream
 List<Integer> Ints.asList(ints);
 
 
-
 /**
   * <p> Conver {@code List} to {@code Map}
-  * {@link [List to Map](https://matthung0807.blogspot.com/2019/12/java-8-lambda-list-to-map.html)}
+  * {@link https://matthung0807.blogspot.com/2019/12/java-8-lambda-list-to-map.html}
   * via {@code stream()}
   */
 public class Item {
@@ -71,53 +70,17 @@ List itemList = Arrays.asList(
         new Item(1L, "Stone"),
         new Item(2L, "Grass"),
         new Item(3L, "Dirt"));
-
 // for each key-value
 itemMap.forEach((k, v) -> {
     System.out.println("key:" + k + ", value:" + v);
 });
 
 /**
-  * <p> for each </p>
-  */
-public class Main {
-     public static void main(String[] args) {
- 
-         List<String> list =  Arrays.asList("matt","john","gary");
- 
-        // for loop
-         for(int i = 0 ; i < list.size() ; i++ ) {
-             System.out.println(list.get(i));
-         }
- 
-         // for-each loop
-         for(String s : list) {
-             System.out.println(s);
-         }
- 
-         //Java 8 forEach()
-
-Map<Long, Item> itemMap = itemList.stream()
-                                  .collect(Collectors.toMap(Item::getId, Funct
-         list.forEach(new Consumer<String>() {
-             @Override
-             public void accept(String s) {
-                 System.out.println(s);
-             }
-         });
- 
-         // Java 8 forEach() Lambda
-         list.forEach(s -> System.out.println(s));
- 
-         // Java 8 forEach() Lambda Method References
-         list.forEach(System.out::println);
-     }
- }
-/**
   * {@link https://matthung0807.blogspot.com/2018/08/java-8-method-references.html}
   * <p> Reference Method </p>
-  * <pre> ClassName :: method </p>
-  */
+  * <pre> ClassName :: method </pre>
+  * <p> For Each </p>
+  *   */
 public class Main {
 
     public static void main(String[] args) {
