@@ -14,7 +14,35 @@ List intlst = Arrays.asList(arr);
 // Array has Object, not primitives 
 List<Integer> list = Arrays.asList(1,2,3);
 // or 
-List<Integer> list = Arrays.asList(new Integer[] {1,2,3,4,5});
+List<Integer> list = Arrays.asList(new Integer[] {1,2,3});
+
+/** ERROR USAGE **/
+List<Integer> list = Arrays.asList(new int[] {1,2,3});
+// because primitive to wrapper coercion (ie. `int[]` to `Integer[]`) is not built into the language  
+// As a result, each primitive type would have to be handled as it's own overloaded method, which is what the commons package does. 
+// i.e. {@code public static List<Integer> asList(int i...);}
+
+// vai `Arrays.Stream` or `IntStream.of` to make a stream of `int` array
+int[] ints = {1,2,3};
+
+//In java 8+ 
+List<Integer> list = Arrays.stream(ints) //IntStream
+                           .boxed()      //Stream<Integer>
+                           .collect(Collectors.toList());
+// equivalent
+//In Java 16 and later:
+List<Integer> list = Arrays.stream(ints)
+                           .boxed()
+                           .toList();
+// via IntStream
+IntStream.of(ints) // return IntStream
+         .boxed() // Stream<Integer>
+         .collect(Collectors.toList());
+// via guava libraries
+// {@code import com.google.common.primitives.Ints;} 
+List<Integer> Ints.asList(ints);
+
+
 
 /**
   * <p> Conver {@code List} to {@code Map}
@@ -42,7 +70,7 @@ public class Item {
 List itemList = Arrays.asList(
         new Item(1L, "Stone"),
         new Item(2L, "Grass"),
-        new Item(3L, "Dirt"));ion.identity()));
+        new Item(3L, "Dirt"));
 
 // for each key-value
 itemMap.forEach((k, v) -> {
@@ -85,40 +113,6 @@ Map<Long, Item> itemMap = itemList.stream()
          list.forEach(System.out::println);
      }
  }
-
-/** ERROR USAGE **/
-List<Integer> list = Arrays.asList(new int[] {1,2,3});
-// because primitive to wrapper coercion (ie. `int[]` to `Integer[]`) is not built into the language  
-// As a result, each primitive type would have to be handled as it's own overloaded method, which is what the commons package does. ie.
-public static List<Integer> asList(int i...);
-
-
-// vai `Arrays.Stream` or `IntStream.of` to make a stream of `int` array
-int[] ints = {1,2,3};
-
-//In java 8+ 
-List<Integer> list = Arrays.stream(ints) //IntStream
-                           .boxed() //Stream<Integer>
-                           .collect(Collectors.toList());
-// via IntStream
-IntStream.of(ints) // return IntStream
-         .boxed() // Stream<Integer>
-         .collect(Collectors.toList());
-
-// In Java 16 and later:
-List<Integer> list = Arrays.stream(ints)
-                           .boxed()
-                           .toList();
-// equivalent
-Arrays.stream(ints)
-      .boxed()
-      .collect(Collectors.toList());
-
-// via guava libraries
-// {@code import com.google.common.primitives.Ints;} 
-List<Integer> Ints.asList(ints);
-
-
 /**
   * {@link https://matthung0807.blogspot.com/2018/08/java-8-method-references.html}
   * <p> Reference Method </p>
