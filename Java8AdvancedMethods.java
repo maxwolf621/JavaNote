@@ -1,4 +1,22 @@
 /**
+  * Usage of {@code asList}
+  * {@link https://stackoverflow.com/questions/12030661/java-int-array-to-hashsetinteger}
+  * {@link https://stackoverflow.com/questions/1073919/how-to-convert-int-into-listinteger-in-java}
+  */
+// The asList method signature
+// Lists are immutable 
+public static <T> List<T> asList(T... a)
+
+// Array contain premitives in it  
+int arr[] = {1,2,3,4,5,6,7};
+List intlst = Arrays.asList(arr);
+
+// Array has Object, not primitives 
+List<Integer> list = Arrays.asList(1,2,3);
+// or 
+List<Integer> list = Arrays.asList(new Integer[] {1,2,3,4,5});
+
+/**
   * <p> Conver {@code List} to {@code Map}
   * {@link [List to Map](https://matthung0807.blogspot.com/2019/12/java-8-lambda-list-to-map.html)}
   * via {@code stream()}
@@ -20,21 +38,16 @@ public class Item {
    // getter setters...
 }
 
-
 // In Main 
 List itemList = Arrays.asList(
         new Item(1L, "Stone"),
         new Item(2L, "Grass"),
-        new Item(3L, "Dirt"));
+        new Item(3L, "Dirt"));ion.identity()));
 
-Map<Long, Item> itemMap = itemList.stream()
-                .collect(Collectors.toMap(Item::getId, Function.identity()));
-
+// for each key-value
 itemMap.forEach((k, v) -> {
     System.out.println("key:" + k + ", value:" + v);
 });
-
-
 
 /**
   * <p> for each </p>
@@ -55,6 +68,9 @@ public class Main {
          }
  
          //Java 8 forEach()
+
+Map<Long, Item> itemMap = itemList.stream()
+                                  .collect(Collectors.toMap(Item::getId, Funct
          list.forEach(new Consumer<String>() {
              @Override
              public void accept(String s) {
@@ -70,20 +86,41 @@ public class Main {
      }
  }
 
+/** ERROR USAGE **/
+List<Integer> list = Arrays.asList(new int[] {1,2,3});
+// because primitive to wrapper coercion (ie. `int[]` to `Integer[]`) is not built into the language  
+// As a result, each primitive type would have to be handled as it's own overloaded method, which is what the commons package does. ie.
+public static List<Integer> asList(int i...);
 
-import java.util.Arrays;
-import java.util.Comparator;
 
-public class Main {
+// vai `Arrays.Stream` or `IntStream.of` to make a stream of `int` array
+int[] ints = {1,2,3};
 
-    public static void main(String[] args) throws Exception {
+//In java 8+ 
+List<Integer> list = Arrays.stream(ints) //IntStream
+                           .boxed() //Stream<Integer>
+                           .collect(Collectors.toList());
+// via IntStream
+IntStream.of(ints) // return IntStream
+         .boxed() // Stream<Integer>
+         .collect(Collectors.toList());
 
-         
-    }
-    
-}
+// In Java 16 and later:
+List<Integer> list = Arrays.stream(ints)
+                           .boxed()
+                           .toList();
+// equivalent
+Arrays.stream(ints)
+      .boxed()
+      .collect(Collectors.toList());
+
+// via guava libraries
+// {@code import com.google.common.primitives.Ints;} 
+List<Integer> Ints.asList(ints);
+
 
 /**
+  * {@link https://matthung0807.blogspot.com/2018/08/java-8-method-references.html}
   * <p> Reference Method </p>
   * <pre> ClassName :: method </p>
   */
@@ -96,7 +133,8 @@ public class Main {
         // Anonymous class
         strList.forEach(new Consumer<String>() {
             @Override
-            public void accept(String s) {
+            public void accept(
+             String s) {
                 System.out.print(s); // ABC
             }
         });
