@@ -2,6 +2,8 @@
 [http, session and cookie](https://tw.alphacamp.co/blog/cookie-session-difference)   
 [http security](https://tw.alphacamp.co/blog/http-https-difference)  
 
+## Session And Cookie
+
 ### Stateless Protocol
 [HTTP METHODS](https://ithelp.ithome.com.tw/articles/10227433)  
 
@@ -36,16 +38,42 @@ Host: www.example.org
 Cookie: yummy_cookie=choco; tasty_cookie=strawberry
 ```
 
-## POST AND GET METHOD
+## METHOD
 
-![image](https://user-images.githubusercontent.com/68631186/125323654-9e34c480-e371-11eb-9367-2919630ef1a6.png)
+在`HTTP 1.1`的版本中定義了八種 Method (方法)
+```diff
+OPTIONS
+GET
+HEAD
+POST
+PUT
+DELETE
+TRACE
+CONNECT
+```
 
-## POST AND PUT METHOD
+[POST AND GET](https://medium.com/%E5%B0%8F%E5%B0%8F%E8%AA%AA%E6%9B%B8%E4%BA%BA/%E7%B6%B2%E9%A0%81get-%E8%88%87-post-%E5%B7%AE%E7%95%B0-%E7%A7%91%E6%99%AE%E5%A3%B9%E9%BB%9E%E9%80%9A-94cbaa666fdb)  
+
+POST : 信封(地址) + 信(內容)
+GET  : 明信片(地址+內容)
+
+![image](https://user-images.githubusercontent.com/68631186/129292506-74e75a8a-d9c9-46dd-91bb-f5fa73d314a5.png)  
+
+[HTTP CONTENT TYPE](https://medium.com/hobo-engineer/ricky%E7%AD%86%E8%A8%98-postman-%E5%B8%B8%E8%A6%8B%E7%9A%84-content-type-b17a75396668)
+
+|  | GET | POST |
+|--|-----|------|
+|bookmark | Y | N |
+|Cache    | Y | N |
+|CONTENT TYPE   | `application/x-www-form-urlencoded` | `application/x-www-form-urlencoded` or `multiple/form-data`
+|HISTORY  | Parameters stored in browser |  |
+|MAXLEN OF URL | char : 2048(MAXLEN of `URL`) | unrestricted | 
+|ENCODE      | ASCII       | No Constraint |
+|VISIBILITY    | INFORMATION WILL BE DISPLAYED IN URL | INFORMATION WILL BE CONTAINED IN THE PAYLOAD |
+
 [POST AND PUT](https://progressbar.tw/posts/53)   
-
-POST : 複製人不同編號(ID), 每POST一次就新增(ADD)一個複製人新編號(ID)    
-
-PUT  : 同一人同編號(ID), 每PUT就更新(UPDATE)此人資訊    
+- POST : (複製人)不同編號(ID), 每POST一次就新增(ADD)一個新編號(ID)    
+- PUT  : 同一人同編號(ID), 每PUT就更新(UPDATE)此人資訊    
 
 ### HTTP敏感資訊
 
@@ -74,9 +102,8 @@ PUT  : 同一人同編號(ID), 每PUT就更新(UPDATE)此人資訊
 
 [HTTP CACHE](https://blog.techbridge.cc/2017/06/17/cache-introduction/)
 
-### 安全與等冪
-
-###### Keyword : `Safe Method`, `Idempotent Method`, `Side Effect`
+## 安全(SAFE METHOD) AND 等冪(IDEPOTENT METHOD) WIT 副作用(SIDE-EFFECT)
+[Definition](https://stackoverflow.com/questions/45016234/what-is-idempotency-in-http-methods)
 
 由於傳統上發送敏感資訊時，並不會透過`GET`，因而會有人誤解為`GET`不安全，這其實是個誤會，或者說對安全的定義不同，
 
@@ -92,28 +119,53 @@ PUT  : 同一人同編號(ID), 每PUT就更新(UPDATE)此人資訊
 
 相對之下，`POST`、`PUT` 與 `DELETE` 這些METHODS，代表著對使用者來說可能會產生**不安全**的操作，e.g. 刪除使用者的資料 ... etc 
 
-**安全與否並不是指METHOD對伺服端是否產生副作用（Side Effect），而是指對使用者來說該動作是否安全**,`GET`也有可能在伺服端產生Side Effect  
+**安全與否並不是指METHOD對伺服端是否產生副作用（Side Effect），而是指對使用者來說該METHOD是否安全**,`GET`也有可能在伺服端產生Side Effect  
 
 ### Idepotent Method
 
 A request method is considered idempotent if the intended effect on the server of multiple identical requests with that method is the same as the effect for a single such request. **And it's worthwhile to mention that idempotency is about the effect produced on the state of the resource on the server and not about the response status code received by the client.**  
 
-To illustrate this, consider the `DELETE` method, which is defined as idempotent.   
-Now consider a client performs a `DELETE` request to delete a resource from the server.  
-The server processes the request, the resource gets deleted and the server returns `204`.  
-Then the client repeats the same DELETE request and, as the resource has already been deleted, the server returns `404`.   
-Despite the different status code received by the client, the effect produced by a single `DELETE` request is the same effect of multiple DELETE requests to the same URI.
-Finally, requests with idempotent methods can be repeated automatically if a communication failure occurs before the client is able to read the server's response. The client knows that repeating the request will have the same intended effect, even if the original request succeeded, though the response might be different.
-> 對於Side Effect的進一步規範是在方法的等冪特性，`GET`、`HEAD`、`PUT`、`DELETE`以及safe request methods 是等冪方法，也就是**單一Request產生的Side Effect，與同樣請求進行多次的Effect必須是相同的**  
 
-`OPTIONS`與`TRACE`本身就不該有副作用，所以他們也是等冪方法  
+**The requests with idempotent methods can be repeated automatically if a communication failure occurs before the client is able to read the server's response.**  The client knows that repeating the request will have the same intended effect, even if the original request succeeded, though the response might be different.
+> 對於Side Effect的進一步規範是在方法的等冪特性，`GET`、`HEAD`、`PUT`、`DELETE`以及safe request methods 是等冪方法，也就是**單一Request產生的Side Effect，與同樣請求進行多次的Effect必須是相同的**, `OPTIONS`與`TRACE`本身就不該有副作用，所以他們也是等冪方法  
 
+Examples
+
+`GET /pageX HTTP/1.1` is idempotent.     
+Called several times in a row, the client gets the same results:
+```
+GET /pageX HTTP/1.1
+GET /pageX HTTP/1.1
+GET /pageX HTTP/1.1
+GET /pageX HTTP/1.1
+```
+
+`POST /add_row HTTP/1.1` is not idempotent;   
+if it is called several times, it adds several rows:
+```
+POST /add_row HTTP/1.1
+POST /add_row HTTP/1.1   -> Adds a 2nd row
+POST /add_row HTTP/1.1   -> Adds a 3rd row
+```
+
+`DELETE /idX/delete HTTP/1.1` is idempotent, even if the returned status code may change between requests:
+
+1. The server processes the request, the resource gets deleted and the server returns `204` or `202`.  
+2. Then the client repeats the same DELETE request and, as the resource has already been deleted, the server returns `404`.   
+   > Despite the different status code received by the client, the effect produced by a single `DELETE` request is the same effect of multiple DELETE requests to the same URI.
+```
+DELETE /idX/delete HTTP/1.1   -> Returns 200 if idX exists
+DELETE /idX/delete HTTP/1.1   -> Returns 404 as it just got deleted
+DELETE /idX/delete HTTP/1.1   -> Returns 404
+```
+
+#### DIFFERENCE BTW `POST` AND `PUT`
 我們可以利用Idepotent來細分`POST`以及`PUT`之區別
+
 `POST`每一筆Request會造成Server上的資源進行變動(ADD) e.g. 新增新的使用者, 違反了Ideptotent的概念, 也是區別`POST`與`PUT`的特性之一，在`HTTP/1.1` Sepecification中,`PUT`方法要求將附加的Entity儲存於指定的`URI`，如果指定的`URI`下已存在資源，則附加的實體是用來進行資源的更新(UPDATE)，如果資源不存在，則將實體儲存下來並使用指定的`URI`來代表它(ADD)，這亦符合等冪特性，例如用`PUT`來更新使用者基本資料，只要附加於請求的資訊相同，一次或多次請求的副作用都會是相同，也就是使用者資訊保持為指定的最新狀態。
 > Like the definition of safe, the idempotent property only applies to what has been requested by the user; a server is free to log each request separately, retain a revision control history, or implement other non-idempotent side effects for each idempotent request.
 
-> 我們將需要利用Safe Method以及Idepotent Method概念考量選用特定METHOD作為Client-Server之間的資源傳輸  
-
+### CONCLUSION
 
 | Method  | Safe | Idempotent |
 |---------|------|------------|
@@ -126,32 +178,40 @@ Finally, requests with idempotent methods can be repeated automatically if a com
 | PUT     | no   | yes        |
 | TRACE   | yes  | yes        |
 
-### REST Api
+> 我們將需要利用Safe Method以及Idepotent Method概念考量選用特定METHOD作為Client-Server之間的資源傳輸  
 
-現在不少 Web 服務或框架支援 REST 風格的架構，REST 全名 REpresentational State Transfer，**REST 架構由客戶端／伺服端組成，兩者間通訊機制是無狀態的（Stateless**，在許多概念上，與 HTTP 規範不謀而合（REST 架構基於 `HTTP 1.0`，與 `HTTP1.1` 平行發展，但不限於HTTP）。
+
+### REST Api 
+
+###### Keyword : `減少重複性`,`使HTTP protocol語意話`, `資源對應的URL`, `Stateless`
+
+現在不少 Web 服務或框架支援 REST 風格的架構，REST 全名 REpresentational State Transfer，**REST 架構由客戶端／伺服端組成，兩者間通訊機制是無狀態的(Stateless)**，在許多概念上，與 HTTP 規範不謀而合（REST 架構基於 `HTTP 1.0`，與 `HTTP1.1` 平行發展，但不限於HTTP）。
 
 - 符合 REST 架構原則的系統稱其為RESTful，
   > 然而注意到以上的描述，並不是說`PUT`只能用於更新(UPDATE)資源，也沒有說要新增(ADD)資源只能用`POST`, 在等冪性時談過,`PUT`在指定的`URI`下不存在資源時，也會新建請求中附上的資源。等冪性是在選用`POST`或 `PUT`時考量的要素之一  
 
-- 另一個重要的考量要性，在 `HTTP/1.1`中也有規範，也就是請求時指定的`URI`之作用
-  > `POST`中請求的`URI`，是要求其背後資源必須處理附加的實體(`Entity`)，而不是代表處理後實體(`Entity`)的`URI`；然而`PUT`時請求的`URI`，就代表請求中附加實體(`Enitity`)的`URI`，無論是更新或是新增實體。
+- `HTTP/1.1`中也有規範，也就是請求時指定的`URI`之作用
+  > `POST`中請求的`URI`，是要求其背後資源必須處理附加的實體(`Entity`)，而不是代表處理後實體(`Entity`)的`URI`；然而`PUT`時請求的`URI`，就代表請求REQUEST中附加實體(`Enitity`)的`URI`，無論是更新或是新增實體。
 
 透過動詞(HTTP Methods)、名詞(URI/URL，代表目標資源)、內容型態(回應的內容，HTML、XML、JSON、etc.), **讓Stateless HTTP protocol能藉由 REST 的語意化設計，攜帶所有的狀態資訊降低對網路通訊的重複請求資源消耗   
 
-透過 RESTful API 的設計風格，每個資源(Resource)都會得到一個到對應的位置（URL），並能透過 HTTP 語意化的方法
-```xml
-[POST] /bookmarks  <!-- 是用來新增一筆資 -->
-[GET] /bookmarks/1 <!-- 用來取得 ID 為 1 的書籤-->
-[PUT] /bookmarks/1 <!-- 用來更新 ID 為 1 的書籤資料-->
-[DELETE] /bookmarks/1  <!-- 用來刪除 ID 為 1 的書籤資料-->
-[GET] http://mytube.com/v1/videos/            <!-- [GET] 取得 video list -->
-[POST] http://mytube.com/v1/videos/           <!-- [POST]新增 video -->
-[GET] http://mytube.com/v1/videos/MgphHyGgeQU <!-- [GET]取得 指定ID[MgphHyGgeQU] 的video -->
-[PUT] http://mytube.com/v1/videos/MgphHyGgeQU <!-- [PUT]修改 指定ID[MgphHyGgeQU] 的video -->
-[DELETE] http://mytube.com/v1/videos/MgphHyGgeQU <!--[DELETE]刪除 指定ID[MgphHyGgeQU] 的video -->
+透過RESTful API的設計風格，**每個資源(Resource)都會得到一個到對應的位置（URL），並能透過 HTTP 語意化的方法**
+```diff
++ [POST] /bookmarks  <!-- 是用來新增一筆資 -->
+! [GET] /bookmarks/1 <!-- 用來取得 ID 為 1 的書籤-->
+! [PUT] /bookmarks/1 <!-- 用來更新 ID 為 1 的書籤資料-->
+! [DELETE] /bookmarks/1  <!-- 用來刪除 ID 為 1 的書籤資料-->
+
+! [GET] http://mytube.com/v1/videos/            <!-- [GET]取得 video list -->
++ [POST] http://mytube.com/v1/videos/           <!-- [POST]新增 video -->
+! [GET] http://mytube.com/v1/videos/MgphHyGgeQU <!-- [GET]取得 指定ID[MgphHyGgeQU] 的video -->
+! [PUT] http://mytube.com/v1/videos/MgphHyGgeQU <!-- [PUT]修改 指定ID[MgphHyGgeQU] 的video -->
+! [DELETE] http://mytube.com/v1/videos/MgphHyGgeQU <!--[DELETE]刪除 指定ID[MgphHyGgeQU] 的video -->
 ```
-[OAuth2User Endpoints with HTTP methods](https://darutk.medium.com/diagrams-and-movies-of-all-the-oauth-2-0-flows-194f3c3ade85)
-[HTTP SEO](https://ithelp.ithome.com.tw/articles/10225117)
+
+[OAuth2User Endpoints with HTTP methods](https://darutk.medium.com/diagrams-and-movies-of-all-the-oauth-2-0-flows-194f3c3ade85)  
+[HTTP SEO](https://ithelp.ithome.com.tw/articles/10225117)  
+
 
 ## [SPA and MVC Structure](https://ithelp.ithome.com.tw/articles/10224772)  
 
@@ -164,8 +224,9 @@ Finally, requests with idempotent methods can be repeated automatically if a com
 [Servlet](https://openhome.cc/Gossip/ServletJSP/ServletGenericServletHttpServlet.html)
 
 ![image](https://user-images.githubusercontent.com/68631186/125268238-18495700-e33a-11eb-9503-0ac4d33835fc.png)
-- HttpServlet took care cotent of HttpServletRequest and HttpServletResponse  
+- HttpServlet took care content of `HttpServletRequest` and `HttpServletResponse`  
 - Servlet Container _creates_ HttpServletRequest/Response Instance,*resolves*,*encapsulates* HttpServletRequest and *sends* HttpServletResponse back to client 
+
 ### FLOW
 1. Web Client **SENDS** HttpServletRequest to Servlet Container
 2. Servlet Container **RESOLVES** Web client's HttpServletRequest
