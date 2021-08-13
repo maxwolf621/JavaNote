@@ -13,6 +13,7 @@
 - [util](util.md)  
 - [rim](rim.md)
 - [Thread Safe](ThreadSafe.md)
+- [Java8Advanced](Java8AdvancedMethods.java)
 
 ## For Spring
 - [lombok](lomBok.md)   
