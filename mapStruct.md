@@ -1,13 +1,10 @@
 # MapStruct
 
-[TOC]
-
-
-@Mapper : This Annotation tells compiler to using MapStruct 
-@Mapping : To Map A and B field
+`@Mapper` : This Annotation tells the Compiler to using `org.mapstruct` 
+`@Mapping` : To Map fields of class A and fields of class B 
 
 ## Basic Mapping 
-if A and B both methods have the same name
+If A and B both fields have the same name
 ```java
 @Mapper 
 class interface Mapper_Class_Name{
@@ -15,30 +12,35 @@ class interface Mapper_Class_Name{
  }
 ```
 
-Say if A's fieldA and B's fieldB both have different name but need to map together.
-For this case, we use `target` and `source` via @Mapping annotation
-```java
-@Mapper 
-class interface Mapper_Class_Name{
-    // B mps to A
-    @Mapping(target="fieldA", source = fieldB)
-    A toA(B b)
- }
+If A's field_A and B's field_B both have different name but need to map together.   
+For such case, we use attributes `target` and `source` of `@Mapping` annotation
 
+```java
 /* A.java */
 public class A{
-    private ? fieldA;
+    private object<?> fieldA;
     //....
 }
+
 /* B.java */
 public class B{
-    private ? fieldB;
+    private object<?> fieldB;
     // ...
+ }
+
+```
+
+```java
+@Mapper 
+class interface Mapper_Class_Name{
+    // B maps to A
+    @Mapping(target ="field_A", 
+             source ="field_B")
+    A toA(B b)
  }
 ```
 
-
-declaration
+Declaration
 ```java
 public static void main(String[] args)
 {
@@ -51,27 +53,30 @@ public static void main(String[] args)
 ```java
 @Mapper
 class interface Mapper_Class_Name{
-  default  A toA(B b){
+  default A toA(B b){
+    
     A a = new A();
     a.set1(b.get1() );
     a.set2(b.get2() );
+    
     // a.setter = b.getter
     retrun a
  }
  ```
  
- ## multiple objects mapping
+## multiple objects mapping
  
- To map >2 classes for example 
+To map >2 classes  
  
- 
- if C maps to A and B
+For example 
+If C maps to A and B
 ```java 
 /* A */
 public class A{
   private FieldA;
   //...
 }
+
 /* B */
 public class B{
   private FieldB;
@@ -80,16 +85,16 @@ public class B{
 
 /* C */
 public classC{
-  private FieldCtoB;
-  private FieldCtoA;
+  private FieldC_B;
+  private FieldC_A;
   //...
 }
 
-/* Map */
+/* Map Struct */
 @Mapper
 class interface Mapper_Name{
-  @Mapping(target = "A.FieldA", source = "FieldCtoA")
-  @Mapping(target = "B.FieldB", source = "FieldCtoB")
+  @Mapping(target = "A.FieldA", source = "FieldC_A")
+  @Mapping(target = "B.FieldB", source = "FieldC_B")
   public C ToC(A a,  B b)
 }
 ```
@@ -98,20 +103,22 @@ class interface Mapper_Name{
 
 Es gibt A,B und C klasses
 
-When Class A contains object of class B as the field
-If C maps to A then 
+When Class A contains object of class B as the field  
+
+If C needs to map to A then 
 ```java
 public class B{
   //...
   private ? fieldB
 }
 
-// A enthalt object B
+// A contains B as field
 pubic class A{
   //...
   private B b;
   //...
 }
+
 public class C{
   //....
   private ? fieldC
@@ -127,34 +134,29 @@ class interface mapper_Name{
 
 ```
 
-
-
-
-
 ## Direct Field
-
-code As Nested Bean
 
 ```java
 @Mapper
 class interface mapper_Name{
   @Mapping(target = "B.name" ,source ="name")
   B CtoB(C c);
+  
   @InheritInverseConfiguration
   C BtoC(B b);
 }
 ```
 
-## Mapping mit .Builder() 
+## Mapping mit `.Builder()` 
 
 
-## Conversion
+## Conversion 
+
+Map two different data type fields
 
 ### numberFormat
 
-```java
-@mapping(numberformat = "$#.00")
-```
+`@mapping(numberformat = "$#.00")`
 
 for example
 ```java
@@ -168,6 +170,7 @@ public class B{
     private string price;
     //..
 }
+
 /* Mapper */
 @Mapper
 public interface Mapper{
@@ -178,8 +181,8 @@ public interface Mapper{
 
 ### dataFormat
 
-
 Conversion of data to `String`
+
 ```java
 /* A */
 public class A{
@@ -192,49 +195,27 @@ public class B{
     private GregoriaCalender Date;
     // ... 
 }
+
 /* Mapper */
 @Mapper
 public interface Mapper{
+    // GregoriaCalender maps to String
     @Mapping(source = "Date" , target = "Date" , dataFormat = "dd.MM.yyyy")
-    A BtoA(B b);
+    A maptoA(B b);
 }
 ```
 
-### expression
-
-mapper will call java method written in the expression 
-
-
+ 
+### Constant
+ 
+Map a constant value to target
 ```java
-@Mapping( expression = "java( b.method( a.METHOD() )" )
+mapping(target = "ConstantMapMe" , constant = "MeMapTarget") 
+// assign MeMapTarget to ConstantMapMe
 ```
-
- for example
- ```java
- /* A */
- public class A{
-    public  MethodA{
-        //..
-     }
-     //.. 
- }
-/* B */
- pbulic class B{
-    public 
- }
- ```
  
- ### Constant
- 
- Map a constant value to target
- 
- ```java
- mapping(target = "ConstantMapMe" , constant = "MeMapTarget") 
- // assign MeMapTarget to ConstantMapMe
- ```
- 
- ### defaultValue
- To pass the default value in case source property is null using defaultValue attribute of @Mapping annotation.
+### defaultValue
+To pass the default value in case source property is `null` using `defaultValue` attribute of `@Mapping` annotation.
  
 ```java
 @Mapping( target = "target-property", 
@@ -248,20 +229,16 @@ mapper will call java method written in the expression
 @Mapping(target = "TargetProperty", 
    expression = "java(TargetMethod( .... ))")
 ```
-
-or we can use `qualifiedByName` attribute which makes code more flexible
-```java
-
-```
+- or we can use `qualifiedByName` attribute which makes code more flexible
 
 ### defaultValueExpression 
 
-using method to set up defaultValue
+Use java method to set up defaultValue
 
 ```java
 @Mapping(target = "target-property", 
          source="source-property" 
-         defaultExpression = "default-value-method")
+         defaultExpression = "java(default-value-method)")
 ```
 
 For example
@@ -281,7 +258,7 @@ public interface mapper{
     @Mapping(target = "name" , 
              source = "name" , 
              defaultExpression = "java(UUID.randomUUID().toString())")
-     B AtoB(A a);
+    B AtoB(A a);
 }
 ```
 
@@ -293,20 +270,21 @@ public interface mapper{
 @Mapper
 public interface Mapper{
     //..
-    List<objectB> ToObjectB(List<objectA> methodA)
+    List<objectB> ToObjectB(List<objectA> As)
 }
+
 /* In Main */
 objectA a = //...
 objectA b = //...
 objectA c = //...
-List<objectA> aList = Array.asList(a,b,c);
-List<objectB> blist = Mapper.toObjectB(alist);
+
+List<objectA> listA = Array.asList(a,b,c);
+List<objectB> listB = Mapper.toObjectB(listA);
 ```
 
-### Map
-[reference](https://mapstruct.org/documentation/stable/api/org/mapstruct/MapMapping.html)
+### [`@MapMapping`](https://mapstruct.org/documentation/stable/api/org/mapstruct/MapMapping.html)
 
-Configures the mapping between two map types, e.g. Map<String, String> and Map<Long, Date>.
+Configures the mapping between two `Map<?,?>` data types, e.g. `Map<String, String>` and `Map<Long, Date>`.
 
 ```java
 @Mapper
@@ -317,32 +295,32 @@ public interface UtilityMapper {
 ```
 
 
-## Enum
+## [Enum](https://mapstruct.org/documentation/stable/api/org/mapstruct/ValueMapping.html)
 
-[referece](https://mapstruct.org/documentation/stable/api/org/mapstruct/ValueMapping.html)
+Map two Enum data types via `@ValueMapping`
 
 ```java
- public enum OrderType { 
+public enum OrderType { 
     RETAIL, 
     B2B, 
     EXTRA, 
     STANDARD, 
     NORMAL 
- }
- public enum ExternalOrderType { 
+}
+public enum ExternalOrderType { 
     RETAIL, 
     B2B, 
     SPECIAL, 
     DEFAULT 
- }
+}
 
-// oderType maps to ExternalOrderType
+// OderType maps to ExternalOrderType
 public interface MAPPER{
- @ValueMapping( source = MappingConstants.NULL, target = "DEFAULT" ),
- @ValueMapping( source = "STANDARD", target = MappingConstants.NULL ),
- // All rest fields in enum will map to 'SEPCIAL'
- @ValueMapping( source = MappingConstants.ANY_REMAINING, target = "SPECIAL" )
- ExternalOrderType orderType_TO_ExternalOrderType(OrderType orderType);
+     @ValueMapping( source = MappingConstants.NULL, target = "DEFAULT" ),
+     @ValueMapping( source = "STANDARD", target = MappingConstants.NULL ),
+     // All rest fields in OrderType will map to 'SEPCIAL' of ExternalOrderType
+     @ValueMapping( source = MappingConstants.ANY_REMAINING, target = "SPECIAL" )
+     ExternalOrderType orderType_TO_ExternalOrderType(OrderType orderType);
 }
 ```
 
@@ -389,6 +367,3 @@ Stream<Integer> numbers = Arrays.asList(1, 2, 3, 4).stream();
 Stream<String> strings = utilityMapper.getStream(numbers);
 assertEquals(4, strings.count());	
 ```
-
-## Customer 
-
