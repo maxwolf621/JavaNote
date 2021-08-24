@@ -1,5 +1,7 @@
 # MapStruct
 
+[Reference](https://www.itread01.com/content/1559145662.html)  
+
 `@Mapper` : This Annotation tells the Compiler to using `org.mapstruct` 
 `@Mapping` : To Map fields of class A and fields of class B 
 
