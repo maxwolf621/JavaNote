@@ -196,8 +196,6 @@ class TransactionMapperImpl extends TransactionMapper {
 
 Another way to customize `@Mapping` capabilities by using `@BeforeMapping` and `@AfterMapping` annotations.  
 The annotations are used to mark methods that are invoked right before and after the mapping logic.
-
-
  
 ## [multiple objects mapping](https://mapstruct.org/documentation/stable/reference/html/#invoking-custom-mapping-method)
  
@@ -228,8 +226,8 @@ public classC{
 /* Map Struct */
 @Mapper
 class interface Mapper_Name{
-  @Mapping(target = "A.FieldA", source = "FieldC_A")
-  @Mapping(target = "B.FieldB", source = "FieldC_B")
+  @Mapping(source = "A.FieldA", target = "FieldC_A")
+  @Mapping(source = "B.FieldB", target = "FieldC_B")
   public C ToC(A a,  B b)
 }
 ```
