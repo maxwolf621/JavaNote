@@ -453,3 +453,22 @@ Predicate<String> eq = pwd -> pwd.equals("password");
   */
 boolean result = opt.map(String::toLowerCase).filter(len6.and(len10 ).and(eq)).isPresent();
 ```
+## [Stream of Optional](https://www.baeldung.com/java-filter-stream-of-optional)
+
+```java
+List<String> filteredList = listOfOptionals.stream()
+  .filter(Optional::isPresent)
+  .map(Optional::get)
+  .collect(Collectors.toList());
+
+List<String> filteredList = listOfOptionals.stream()
+  .flatMap(o -> o.map(Stream::of).orElseGet(Stream::empty))
+  .collect(Collectors.toList());
+```
+
+In Java 9 
+Uusing a predefined method for converting Optional instance into a Stream instance:
+It will return a stream of either one or zero element(s) whether the Optional value is or isn't present:
+```java
+List<String> filteredList = listOfOptionals.stream().flatMap(Optional::stream).collect(Collectors.toList());
+```
