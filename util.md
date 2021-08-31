@@ -16,9 +16,10 @@ Set and List both inheritance collection
 boolean add(Object o)      
 
 /**
-  * <h#> 
-  * 刪除集合中所有的物件，即不再持有這些物件的引用 
-  * </h#>
+  * <p> 
+  * 刪除集合中所有的物件,
+  * 即不再持有這些物件的reference
+  * </p>
   */
 void clear()              
 
@@ -38,13 +39,14 @@ boolean contains(Object o)
 
 /**
   * <p> 
-  * delete a ref in collection 
+  * Delete a reference 
+  * in collection 
   * </p>
   */
 boolean remove(Object o)
 
 /** 
-  * @return Iterator 物件，可以用來遍歷集合中的元素 
+  * @return Iterator，可以用來遍歷集合中的元素 
   */
 Iterartor iterator()  
 
@@ -425,7 +427,11 @@ Optional<Integer> intOpt = nameOptional.map(String::length);
 System.out.println(intOpt.orElse(0));
 ```
 
-### filter and map 
+### [`filter`](https://www.baeldung.com/java-optional#filter) and map 
+
+`map` :　Transforming Value
+`filter` : Filter value with Condition
+
 ```java
 /**
  * <p> 
