@@ -352,15 +352,15 @@ String name2 = Optional.ofNullable(name).orElse(getDefaultValue());
 String name3 = Optional.ofNullable(name).orElseGet(OrElseOptionalDemo::getDefaultValue);
 ```
 
-### Different btw `.orELse` and `.orElseGet`
-```java
+### [Different btw `.orELse` and `.orElseGet`](https://www.baeldung.com/java-optional#differences-or-else)
 
+As a matter of fact, these two methods give the impression that they overlap each other in functionality.
+```java
 String name = "Im_not_Null";
 /**
   * {@code orElse(Method())} 
   */
-String name2 = Optional
-               .ofNullable(name)
+String name2 = Optional.ofNullable(name)
                 /**
                  * {@code getDefaultValue()} always will be called
                  * {@code ofNullable(name)} is null whether or not
@@ -370,15 +370,14 @@ String name2 = Optional
 /**
  * {@code orElseGet(class::method)} 
  */
-String name3 = Optional
-               .ofNullable(name)
+String name3 = Optional.ofNullable(name)
                /**
                  * {@code orElseGet} with {@code OrElseOptionalDemmo::getDefaultValue} 
                  * means this method may not be called 
                  */
                .orElseGet(OrElseOptionalDemo::getDefaultValue);
 ```
-
+- Use `orElseGet` instead of `orElse` in practice
 
 ## `.filter( para -> condition )`
 ```java
