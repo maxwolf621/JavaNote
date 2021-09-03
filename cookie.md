@@ -1,12 +1,21 @@
-[Same cookiename problem](https://stackoverflow.com/questions/3193163/is-calling-httpservletresponse-addcookie-with-the-same-cookie-name-safe)    
-[spring cookie](https://beginnersbook.com/2013/05/servlet-cookies/)    
+[Same Cookiename problem](https://stackoverflow.com/questions/3193163/is-calling-httpservletresponse-addcookie-with-the-same-cookie-name-safe)    
+[Spring cookie](https://beginnersbook.com/2013/05/servlet-cookies/)    
 [Session/Token/Cookie](https://blog.yyisyou.tw/5d272c64/)    
 [Cookie Methods](https://www.geeksforgeeks.org/javax-servlet-http-cookie-class-java/)     
 [Vorstellung von cookies](https://ithelp.ithome.com.tw/articles/10217955)    
 
+# Cookie 
+
+Cookie,which is applied for HTTP statless protocol, carries the (STATE) information of the client for Server recognizing the certain User    
+
+The disadvantage of the cookie is that it is stored in client's browser or device which means we can easily fake the cookie and also the cookie contains bulk data will affect the efficiency.
+Instead we use [session](Session.md) to deal with these problems 
+
 ## How cookies functions
 ![](https://media.geeksforgeeks.org/wp-content/uploads/cookies.jpg)    
 ![image](https://user-images.githubusercontent.com/68631186/122122215-18e7ee00-ce5f-11eb-8168-2f75bc710740.png)    
+
+
 
 For example    
 ![image](https://user-images.githubusercontent.com/68631186/122121919-bee72880-ce5e-11eb-8bef-13f04ef9300a.png)   
