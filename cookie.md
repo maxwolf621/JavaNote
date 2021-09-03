@@ -6,7 +6,8 @@
 
 # Cookie 
 
-Cookie,which is applied for HTTP statless protocol, carries the (STATE) information of the client for Server recognizing the certain User    
+Cookie,which is applied for HTTP statless protocol, carries the STATE information of the client for Server    
+- e.g. my password, my account_name, my name ... etc ...
 
 The disadvantage of the cookie is that it is stored in client's browser or device which means we can easily fake the cookie and also the cookie contains bulk data will affect the efficiency.
 Instead we use [session](Session.md) to deal with these problems 
