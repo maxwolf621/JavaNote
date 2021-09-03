@@ -1,7 +1,12 @@
 
 [Reference](https://ithelp.ithome.com.tw/articles/10246787)  
-[Cookie](cookie.md)   
-# Crerate A Session  
+
+# [Session](https://medium.com/tsungs-blog/day14-session%E8%88%87cookie%E5%B7%AE%E5%88%A5-eb7b4035a382)
+
+It stores the **valid and important** information of the Client and will be used by Server 
+- e.g. how Server authenticates the valid user against the Request the client gave
+
+## Crerate A Session  
 ```java
 public class SessionServlet extends BaseServlet {
 	private static final long serialVersionUID = 1L;
