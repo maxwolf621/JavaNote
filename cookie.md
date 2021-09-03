@@ -66,8 +66,8 @@ By default, a cookie applies to the server it came from.
   > the cookie's domain must be the same as, or a parent of, the origin domain  
   > the cookie's domain must not be a TLD, a public suffix, or a parent of a public suffix.  
 
-[TLD](https://raventools.com/marketing-glossary/top-level-domain/)  
-Top-Level Domain : A Top-Level Domain is the suffix tied to a website, such as as com, net, or org.   
+#### [TLD](https://raventools.com/marketing-glossary/top-level-domain/)  
+Top-Level Domain : A Top-Level Domain is the suffix tied to a website, such as as `com`, `net`, or `org`.   
 
 ### Domain 跨域訪問
 
