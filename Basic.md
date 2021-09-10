@@ -326,21 +326,21 @@ pubic class test{
 ## Interface 
 - Interface是Abstract的延伸，Before Java 8，它可以看成是一個完全ABCs(Class only with abstract methods)，也就是說它不能有任何的方法實現
 
-- Since Java 8, Interface新增的`default`方法實作,減少未來程式擴充的維護Cost  
-  > Before Java 8，當某個Interface想要新增新的方法，得要修改所有實作(Implement)該Interface的類別(class)，讓它們都實作新增的方法 [MORE DETAILS](https://matthung0807.blogspot.com/2017/09/java-interfacedefault-methods.html)  
+- Since Java 8, Interface新增的`default`方法實作,減少未來程式擴充的維護COST
+  > Before Java 8，當某個Interface新增了新的方法，得要修改所有實作(Implement)該Interface的類別(class)，讓它們都實作新增的方法 [MORE DETAILS](https://matthung0807.blogspot.com/2017/09/java-interfacedefault-methods.html)  
 
 - Member in the Interface : 
-  > `public` by default，不允許定義為`private` 或者`protected`的成員Members. **Since Java 9，允許將方法定義為`private`，這樣就能定義某些復用的程式又不會把方法暴露出去[Example GeekForGeek](https://www.geeksforgeeks.org/private-methods-java-9-interfaces/)**     
+  > `public` by default，不允許定義為`private` 或者`protected`的成員Members. **Since Java 9，允許將方法定義為`private`，這樣就能定義某些復用的程式又不會把方法暴露出去 [see Example GeekForGeek](https://www.geeksforgeeks.org/private-methods-java-9-interfaces/)**   
   > Keyword `static` and `final` for fields by default    
 
 
 ### Java 9's interface
 
-[Use Private Method](https://www.codewithjason.com/purpose-private-methods-use/#:~:text=Private%20methods%20are%20useful%20for,called%20outside%20of%20that%20class.)
+[Use Private Method](https://www.codewithjason.com/purpose-private-methods-use/#:~:text=Private%20methods%20are%20useful%20for,called%20outside%20of%20that%20class.)   
 
-[Why use Private Method IN OOP](https://stackoverflow.com/questions/2620699/why-private-methods-in-the-object-oriented#:~:text=Private%20methods%20are%20useful%20for,called%20outside%20of%20that%20class.)
+[Why use Private Method IN OOP](https://stackoverflow.com/questions/2620699/why-private-methods-in-the-object-oriented#:~:text=Private%20methods%20are%20useful%20for,called%20outside%20of%20that%20class.)   
 
-Private methods can be implemented static or non-static.  
+Private methods can be implemented static or non-static.   
 > This means that in an interface we are able to create private methods to encapsulate code from both `default` and `static` public method signatures.
 
 `private` is what won't be **reimplemented and accessed** by future programmers using your code.  
@@ -348,6 +348,7 @@ But private also means things done on the side, so the user don't see it(encapsu
 That's why we call the public methods a public interface - it's all the user will see from the outside.   
 
 ```
+Interface can have
 Constant variables
 Abstract methods
 - Default methods (JAVA 8)
@@ -359,9 +360,9 @@ These private methods will improve code re-usability inside interfaces and will 
 **THEY are only accessible within that interface only and cannot be accessed or inherited from an interface to another interface or class.**
 
 - Private method in `interface` cannot be `abstract` and no `private` + `abstract` modifiers together.
-- Private method can be used(called) only inside `interface` and other `static` and non-static methods in the `interface`.
+- **Private method can be used(called) only inside `interface` and other `static` and non-static methods in the `interface`.**
 - Private non-static methods cannot be used inside private static methods. (Same as `static` usage)
-> We should use `private` modifier to define these methods and no lesser accessibility than private modifier.
+  > We should use `private` modifier to define these methods and no lesser accessibility than private modifier.
 
 ### Benefits of Private Methods in Interfaces (使界面更有OOP精神=>封裝)
 
@@ -369,8 +370,6 @@ These private methods will improve code re-usability inside interfaces and will 
 > As a result, one of the main benefits of having these in `interface`s is **encapsulation**.
 
 Another benefit is (as with private methods in general) that there is less duplication and more re-usable code added to interfaces for methods with similar functionality.
-
-
 
 ## Interface Vs Abstract Class 
 [More Details](https://stackoverflow.com/questions/1913098/what-is-the-difference-between-an-interface-and-abstract-class)   
@@ -400,6 +399,7 @@ interface derived extends InterfaceBase1, InterfaceBase2{
   // create new static variable , new abstract methods
 }
 
+
 //Implementation 
 class A implements interfacebase1, interfacebase2{
   // implements methods of intefacebase1 and interfacebase2 
@@ -408,16 +408,17 @@ class A implements interfacebase1, interfacebase2{
 - Abstract classes can have constants, members, method stubs(methods without a body) and defined methods, whereas interfaces can only have constants and methods stubs.
 - **Methods and members of an abstract class can be defined with any visibility**, whereas all methods of an interface can be defined as `public`, `private`, and `default`.
 - When inheriting an abstract class, a concrete child class must define the abstract methods, whereas **an abstract class can extend another abstract class and abstract methods from the parent class don't have to be defined.**
-- Similarly, **an interface extending another interface is not responsible for implementing methods from the parent interface.** This is because interfaces cannot define any implementation.
-- **A sub class can only extend a single class (abstract or concrete)**, whereas **an interface can extend or a class can implement multiple other interfaces**.
-
+- Similarly, **an interface extending another interface is not responsible for implementing methods from the parent interface.** 
+  > This is because interfaces cannot define any implementation.
+- **A child class can only extend a single class (abstract or concrete)**, whereas **an interface can extend or a class can implement multiple other interfaces**.
 - **A child class can define abstract methods with the same or less restrictive visibility**, whereas a class implementing an interface must define the methods with the exact same visibility (`public`).
 
-- `absract class` : `IS-A` Relationship，需滿Liskov Substitution Principle，即Sub Class's object必須能夠替換所有Base Class's Object    
+
+- `absract class` : `IS-A` Relationship，需滿Liskov Substitution Principle，也就是Child Class's object必須能夠替換所有Base Class's Object    
 - `intface`       : `LIKE-A(HAS-A)` Relationship，it contains abstract methods. There is no `IS-A` Relationship btw `interface` and implementations  
 
 A Class can implement multiple `interface`s but it can not extend multiple `abstract class`es。
-- `interface`'s Keyword has only `static` or `final`
+- `interface`'s Keyword has only `static` , `final` , `default`, 
   > `abstract class`'s has no constraint  
 - `interface`'s Members have only `public`,`priave` or `default`  
   > `abstract class`'s Members have different Access Controls  
