@@ -670,9 +670,9 @@ public static void main(String[] args) {
 
 ## Overload
 
-指在某Class內存在多個相同的Method名稱，但是在該Method的Parameter上數量,類型或順序At Least有一個不同  
+指在某Class內存在多個相同的Method名稱，但是在該Method的Parameter上數量,類型或順序至少有一項不同    
+**返回類型不同，其它都相同不能稱作Overload**   
 
-- 返回類型不同，其它都相同不能稱作Overload
 ```java
 class OverloadingExample {
     
@@ -697,12 +697,14 @@ public static void main(String[] args) {
 ## Throwable
 [Interview Question](https://www.journaldev.com/2167/java-exception-interview-questions-and-answers)
 
-![image](https://user-images.githubusercontent.com/68631186/128909452-5ebbd566-1aa4-4f7e-b396-d65f64dede5a.png)
-- Error(uncheck exception)   : Program無法處理的錯誤(unable to handle)
-- Exception(check exception) : Program可以處理(able to handle)的Exception
-  > 其中Exception又分為`RuntimeException`和`IOException`異常。
+
 
 #### Error和Exception的區別
+
+![image](https://user-images.githubusercontent.com/68631186/128909452-5ebbd566-1aa4-4f7e-b396-d65f64dede5a.png)
+- Error(uncheck exception)   : 無法處理的錯誤(unable to handle), 程式碼要改
+- Exception(check exception) : 可以處理(able to handle)的Exception
+  > 其中Exception又分為`RuntimeException`和`IOException`異常。
 
 - **Error通常是災難性的致命的錯誤，是Program無法控制和處理的(unable to handle)，當出現這些異常時，JVM一般會選擇終止thread**
 - Exception通常情況下是可以被Program處理的(able to handle)，並且可在Program中應盡可能以`try ... catch ...`去處理這些異常
@@ -721,7 +723,7 @@ if( exception condition){
 ```
 - 當Program情況**符合異常情形(exception condition)**則會
   > 阻止當前Method或Scope繼續執行     
-  > 其次把`Exception Condition`和`普通問題`相區分**(`普通問題`是指在當前環境下能得到足夠的信息，總能處理這個錯誤)**  
+  > 其次把`Exception Condition`和`普通問題`相區分 **(`普通問題`是指在當前環境下能得到足夠的信息，總能處理這個錯誤)**  
   > `Exception Condition`，是program已經無法繼續下去了，因為在當前環境下無法獲得必要的信息來解決問題，Developer所能做的就是從當前環境中拋出(`throw`)，並返回(`return`)當前`exception`的問題給上一層環境   
   > (`thorw`)拋出異常後, 將使用`new Exception_Name`並push到Stack上；然後，當前的執行路徑（已經無法繼續下去了）被終止，並且從當前環境中彈出對異常對象的引用。此時，異常處理機制接管Program，並開始尋找一個恰當的地方繼續執行程序，這個恰當的地方就是異常處理程序或者異常處理器，它的任務是將程序從錯誤狀態中恢復，以使Program換一種方式運行或從錯誤之後繼續運行下去  
  
@@ -840,12 +842,9 @@ finally{
 **每當遇到一個`try`，異常的結構就會被PUSH到EXCEPTION STACK中，直到所有的`try` block都PUSH完畢,如果下一級的`try`沒有對某種異常進行處理，EXCEPTION STACK就會執行POP, 直到遇到有處理這種異常的`try`或者最終將異常拋給JVM**
 
 - RuntimeException與unchecked exception
-  > RuntimeException表示JVM的通常操作中可能遇到的異常，是一種常見運行錯誤，只要程式設計得沒有問題通常就不會發生**   
+  > **RuntimeException表示JVM在**運行**時遇到的異常，是一種常見運行錯誤，只要程式設計得沒有問題通常就不會發生**   
   > **Checked Exception跟Program's Context環境有關，即使Program設計無誤，仍可因使用的問題而拋出異常**   
   > Java編譯器要求方法必須聲明拋出該方法執行時可能會發生的Checked Exception，但是並不要求必須宣告拋出未被catch的`RuntimeException`   
-
-**異常表示Program在runtime過程中可能出現的非正常狀態**
-
 
 異常和繼承一樣，是OOP中經常被濫用的東西，在Effective Java中對異常的使用的幾點原則： 
 - 不要將異常處理用於正常的控制流（設計良好的API不應該強迫它的呼叫者為了正常的控制流而使用異常） 
