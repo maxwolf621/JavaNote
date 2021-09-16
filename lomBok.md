@@ -202,7 +202,7 @@ now we can create Student via build pattern with `studentBuilder`
 Student std = Student.studentBuilder().firstNamer("John").lastName("Mayer").middleName("clapton").rollNumber(12345678).build()
 ```
 
-###　`@SuperBuilder` and Inheritance
+### `@SuperBuilder` and Inheritance
 [Advanced](https://www.baeldung.com/lombok-builder-inheritance)
 
 ```java
