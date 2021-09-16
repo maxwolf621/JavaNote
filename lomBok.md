@@ -153,3 +153,78 @@ Child instance = Child.builder().b(7).e(6.3).build();
 Log the console's information
 
 ![](https://i.imgur.com/rGbxUUo.png)
+
+
+## child class with lombok
+[Inheritance with Lombok](https://blog.knoldus.com/how-to-deal-with-inheritance-while-using-lombok-builder/)
+
+
+```java
+import lombok.Builder;
+
+@Builder
+public class Person {
+
+    private final String firstName;
+    private final String lastName;
+    private final String middleName;
+}
+
+import lombok.Builder;
+
+@Builder
+public final class Student extends Person {
+
+    private final String rollNumber;
+}
+```
+the above which causes error.
+
+```java
+public final class Student extends Person {
+
+    private final String rollNumber;
+
+    /**
+      * passing all the fields you want in Student  
+      */
+    @Builder(builderMethodName = "studentBuilder")
+    public Student(final String firstName, final String lastName, final String middleName, final String rollNumber) {
+        super(firstName, lastName, middleName);
+        this.rollNumber = rollNumber;
+    }
+}
+```
+
+now we can create Student via build pattern with `studentBuilder`
+
+```java
+Student std = Student.studentBuilder().firstNamer("John").lastName("Mayer").middleName("clapton").rollNumber(12345678).build()
+```
+
+###　`@SuperBuilder` and Inheritance
+[Advanced](https://www.baeldung.com/lombok-builder-inheritance)
+
+```java
+@Getter
+@SuperBuilder
+public class Parent {
+    int parentAgd;
+]
+@Getter
+@SuperBuilder
+public class Child extends Parent {
+    int childAge ;
+}
+@Getter
+@SuperBuilder
+public class Student extends Child {
+    int studentAge;
+}
+```
+
+then we can now directly use `builder()` 
+
+```java
+Student std = Student.builder().parentAge(55).childAge(13).studentAge(23).build()
+```
