@@ -58,9 +58,8 @@ public int hashCode()
 }
 ```
 
-`@EqualAndHashCode(exclude = "id")` equals
-this will exclude attribute `id` from `equal` and `HashCode`
-
+`@EqualAndHashCode(exclude = "id")` equals  
+- this will exclude attribute `id` from `equal` and `HashCode`
 ```java
 public boolean equals(Object o)
 {
@@ -94,10 +93,8 @@ public User(id, name){
 }
 ```
 
-:::info    
-if we dont create a constructor, java will create a No args Constructor by itself   
+If we dont create a constructor, java will create a No args Constructor by itself. 
 so do make sure add annotation `@NoArgsConstructor` while there is `@AllArgsConstrcutor`  
-:::  
 
 ## @RequiredArgsConstructor
 
@@ -157,7 +154,6 @@ Log the console's information
 
 ## child class with lombok
 [Inheritance with Lombok](https://blog.knoldus.com/how-to-deal-with-inheritance-while-using-lombok-builder/)
-
 
 ```java
 import lombok.Builder;
